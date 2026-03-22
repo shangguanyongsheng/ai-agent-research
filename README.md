@@ -1,49 +1,45 @@
-# AI Agent Research 🤖
+# AI Agent Research
 
-> OpenClaw 托管模式 - 自动监控 AI Agent 最新研究
+AI Agent 研究与实践项目仓库
 
-## 📊 项目结构
+## 📚 文档目录
 
-```
-ai-agent-research/
-├── daily/                    # 每日研究报告
-│   └── 2026-03/
-│       └── 2026-03-16.md
-├── monthly/                  # 月度总结报告
-│   └── 2026-03.md
-├── skills-registry/          # 技能注册表
-│   └── search-algorithms.md
-├── agent-logs/               # Agent 运行日志
-│   └── pm-agent/
-│   └── dev-agent/
-│   └── qa-agent/
-└── README.md
-```
+### 使用手册
+- [OpenClaw使用手册](docs/OpenClaw使用手册.md) - 完整的 OpenClaw 安装配置指南
+- [Claude_Code使用手册](docs/Claude_Code使用手册.md) - Claude Code 开发者指南
 
-## 🤖 多 Agent 协作
+### 研究报告
+- [Agent_Harness研究报告](docs/Agent_Harness研究报告.md) - Agent 框架深度研究
+- [QQ Bot 语音识别集成方案](docs/qqbot-voice-recognition-solution.md)
 
-| Agent | 角色 | 职责 |
-|-------|------|------|
-| **pm-agent** | 产品经理 | 需求调研、GitHub 分析、竞品调研 |
-| **architect-agent** | 架构师 | 技术选型、架构设计 |
-| **dev-agent** | 开发工程师 | 脚本实现、功能开发 |
-| **qa-agent** | 测试工程师 | 测试报告、质量分析 |
-| **ops-agent** | 运维工程师 | 部署、监控、CI/CD |
-| **doc-agent** | 文档工程师 | 报告撰写、文档维护 |
+### 项目规划
+- [GitHub Agent 学习计划](docs/github-agent-learning-plan.md)
+- [Simple BI 多Agent 计划](docs/simple-bi-multi-agent-plan.md)
+- [OpenClaw 控制中心安装 SOP](docs/control-center-install-sop.md)
 
-## 📅 自动化任务
+### 市场研究
+- [AI 视频创作分析](docs/market-research/ai-video-creator-analysis.md)
+- [IM vs 企业自动化](docs/market-research/im-vs-enterprise-automation.md)
+- [MCP 产品方向](docs/market-research/mcp-product-directions.md)
+- [小程序游戏研究](docs/market-research/mini-program-games.md)
+- [视频平台趋势](docs/market-research/video-platform-trends.md)
 
-| 任务 | Agent | 频率 | 时间 |
-|------|-------|------|------|
-| GitHub Trending 分析 | pm-agent | 每日 | 08:00 |
-| 技术选型评估 | architect-agent | 每周 | 周三 10:00 |
-| 月度报告生成 | doc-agent | 每月 | 1 日 09:00 |
+### 小说创作系统
+- [架构设计](docs/inkos-integration/architecture.md)
+- [实现步骤](docs/inkos-integration/implementation-steps.md)
 
-## 🔗 相关链接
+## 🛠️ 应用
 
-- [OpenClaw 官方文档](https://docs.openclaw.ai)
-- [OpenViking - OpenClaw 上下文数据库](https://github.com/volcengine/OpenViking)
+### news-daily
+AI 新闻日报生成器 v3.2
+- 数据源：Hacker News + 硅谷媒体 + xix.ai
+- 支持定时推送到 QQ Bot
+- [快速开始](apps/news-daily/QUICKSTART.md)
+
+## 📅 日报
+
+每日 AI Agent 研究日报存放在 [daily/](daily/) 目录
 
 ---
 
-*由 OpenClaw 托管模式自动维护*
+*最后更新: 2026-03-22*
