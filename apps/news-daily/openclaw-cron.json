@@ -1,0 +1,12 @@
+{
+  "name": "ai-news-daily",
+  "description": "AI 新闻日报 - 每天早上 8 点自动生成并推送",
+  "schedule": "0 8 * * *",
+  "command": "cd ~/.openclaw/workspace/apps/news-daily && source .venv/bin/activate && uv run python cron_job.py",
+  "env": {
+    "SEARXNG_URL": "http://localhost:8080",
+    "NEWS_OUTPUT_DIR": "~/.openclaw/workspace/apps/news-daily/reports"
+  },
+  "enabled": true,
+  "timeout": 300
+}
