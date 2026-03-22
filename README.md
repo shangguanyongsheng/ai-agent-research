@@ -43,3 +43,7 @@ AI 新闻日报生成器 v3.2
 ---
 
 *最后更新: 2026-03-22*
+
+### 社区文档
+- [OpenClaw社区贡献指南](docs/OpenClaw社区贡献指南.md) - 如何参与社区贡献
+- [多Agent协作社区调研报告](docs/多Agent协作社区调研报告.md) - CrewAI/AutoGen/Swarm 等平台对比
