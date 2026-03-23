@@ -1,16 +1,22 @@
-# Simple BI Agent 学习指南
+# AI Agent 学习指南
 
-> 用费曼学习法构建 AI Agent 知识体系
+> 用费曼学习法构建 AI Agent 完整知识体系
+
+## 🗺️ 知识图谱
+
+**入口文档**：[00-知识图谱.md](./00-知识图谱.md) - 完整的 AI Agent 知识体系地图
+
+---
 
 ## 🎯 学习目标
 
-通过 Simple BI Agent 项目，你将掌握：
+通过本学习指南，你将掌握：
 
-1. **ReAct 框架** - 让 Agent 能够思考和反思
-2. **进化引擎** - 让 Agent 能够自我改进
-3. **Hooks 机制** - 让 Agent 的行为可扩展
-4. **记忆系统** - 让 Agent 能够记忆和学习
-5. **Skills 工具** - 让 Agent 能够使用工具
+1. **基础概念** - Agent 定义、Agent Harness、ReAct 框架
+2. **记忆系统** - 双记忆系统、工作记忆、持久化
+3. **进化引擎** - 螺旋上升、自我改进
+4. **工具平台** - OpenClaw、Claude Code、Skills
+5. **进阶主题** - EvoMap、Multi-Agent 协作、安全沙箱
 
 ---
 
