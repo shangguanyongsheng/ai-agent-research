@@ -22,6 +22,7 @@
 | 项目 | 位置 | 描述 |
 |------|------|------|
 | **ai-agent-research** | GitHub | AI Agent 研究与实践文档仓库 |
+| **hz-free-parking** | projects/hz-free-parking | 杭州免费停车位查询（高德地图 API） |
 
 ---
 
@@ -29,3 +30,4 @@
 
 - Created: 2026-03-05
 - Updated: 2026-03-23 (添加文档仓库永久记忆)
+- Updated: 2026-03-23 (添加 hz-free-parking 项目)
