@@ -1,217 +1,190 @@
-# AI Agent 学习指南
+# AI Agent 知识图谱
 
 > 用费曼学习法构建 AI Agent 完整知识体系
 
-## 🗺️ 知识图谱
-
-**入口文档**：[00-知识图谱.md](./00-知识图谱.md) - 完整的 AI Agent 知识体系地图
-
 ---
 
-## 🎯 学习目标
-
-通过本学习指南，你将掌握：
-
-1. **基础概念** - Agent 定义、Agent Harness、ReAct 框架
-2. **记忆系统** - 双记忆系统、工作记忆、持久化
-3. **进化引擎** - 螺旋上升、自我改进
-4. **工具平台** - OpenClaw、Claude Code、Skills
-5. **进阶主题** - EvoMap、Multi-Agent 协作、安全沙箱
-
----
-
-## 📚 知识体系图
+## 🗺️ 知识图谱总览
 
 ```
-                        ┌─────────────────────────────────────┐
-                        │          AI Agent 核心概念           │
-                        └─────────────────────────────────────┘
-                                          │
-            ┌─────────────────────────────┼─────────────────────────────┐
-            │                             │                             │
-            ▼                             ▼                             ▼
-    ┌───────────────┐           ┌───────────────┐           ┌───────────────┐
-    │   Planning    │           │    Memory     │           │   Tool Use    │
-    │   (规划)      │           │   (记忆)      │           │  (工具使用)   │
-    └───────────────┘           └───────────────┘           └───────────────┘
-            │                             │                             │
-            │                             │                             │
-            ▼                             ▼                             ▼
-    ┌───────────────┐           ┌───────────────┐           ┌───────────────┐
-    │ ReAct 框架    │           │ 双记忆系统    │           │    Skills     │
-    │ • Thought     │           │ • 全局记忆    │           │ • 定义        │
-    │ • Action      │           │ • 用户记忆    │           │ • 管理        │
-    │ • Observation │           │ • 工作记忆    │           │ • 执行        │
-    │ • Reflection  │           │              │           │              │
-    └───────────────┘           └───────────────┘           └───────────────┘
-            │                             │                             │
-            └─────────────────────────────┼─────────────────────────────┘
-                                          │
-                                          ▼
-                        ┌─────────────────────────────────────┐
-                        │           进化引擎                   │
-                        │  • 每日统计 - 分析错误模式           │
-                        │  • 每月进化 - 生成新 Skill           │
-                        │  • 螺旋上升 - 持续改进               │
-                        └─────────────────────────────────────┘
-                                          │
-                                          ▼
-                        ┌─────────────────────────────────────┐
-                        │           Hooks 机制                 │
-                        │  • 操作前拦截                        │
-                        │  • 操作后验证                        │
-                        │  • 自动格式化                        │
-                        └─────────────────────────────────────┘
-                                          │
-            ┌─────────────────────────────┼─────────────────────────────┐
-            │                             │                             │
-            ▼                             ▼                             ▼
-    ┌───────────────┐           ┌───────────────┐           ┌───────────────┐
-    │ Multi-Agent   │           │  Safety &     │           │    Prompt     │
-    │ 协作          │           │  Sandbox      │           │ Engineering   │
-    │ • 顺序协作    │           │  • 代码审查   │           │ • 角色定义    │
-    │ • 层级协作    │           │  • 执行超时   │           │ • 任务描述    │
-    │ • 对等协作    │           │  • 资源限制   │           │ • 输出格式    │
-    └───────────────┘           └───────────────┘           └───────────────┘
+                            ┌─────────────────────────────────────┐
+                            │         AI Agent 知识体系            │
+                            │     感知 + 决策 + 行动 + 学习         │
+                            └─────────────────────────────────────┘
+                                            │
+        ┌───────────────┬───────────────┬───┴───┬───────────────┬───────────────┐
+        │               │               │       │               │
+        ▼               ▼               ▼       ▼               ▼
+┌───────────────┐┌───────────────┐┌───────────────┐┌───────────────┐┌───────────────┐
+│ foundation    ││ memory        ││ tools         ││ evolution     ││ advanced      │
+│ 基础概念      ││ 记忆系统      ││ 工具平台      ││ 进化系统      ││ 进阶主题      │
+└───────────────┘└───────────────┘└───────────────┘└───────────────┘└───────────────┘
+        │               │               │               │               │
+        ▼               ▼               ▼               ▼               ▼
+┌───────────────┐┌───────────────┐┌───────────────┐┌───────────────┐┌───────────────┐
+│ • Agent定义   ││ • 双记忆系统  ││ • OpenClaw    ││ • 进化引擎    ││ • Multi-Agent │
+│ • Agent Harness││ • 工作记忆   ││ • Claude Code ││ • EvoMap      ││ • 安全沙箱    │
+│ • ReAct框架   ││ • 持久化      ││ • Skills      ││ • 自然选择    ││ • Prompt Eng  │
+│ • Planning    ││               ││ • MCP协议     ││               ││ • Hooks机制   │
+└───────────────┘└───────────────┘└───────────────┘└───────────────┘└───────────────┘
 ```
 
 ---
 
-## 📖 学习路径
+## 📂 分支结构
 
-### Phase 1: 基础概念（1-2 天）
+### 1️⃣ [foundation/](./foundation/) - 基础概念
 
-| 序号 | 文档 | 学习目标 |
-|------|------|----------|
-| 01 | [ReAct 框架](./01-react-framework.md) | 理解 Thought → Action → Observation 循环 |
-| 02 | [记忆系统](./02-memory-system.md) | 理解双记忆系统和工作记忆 |
+> AI Agent 的核心概念和理论基础
 
-### Phase 2: 核心机制（2-3 天）
+| 知识点 | 文件 | 学习目标 |
+|--------|------|----------|
+| Agent 定义 | [agent-定义.md](./foundation/agent-定义.md) | 理解 Agent 是什么，与普通 LLM 的区别 |
+| Agent Harness | [agent-harness.md](./foundation/agent-harness.md) | 理解控制层的六大功能 |
+| ReAct 框架 | [react-框架.md](./foundation/react-框架.md) | 掌握 Thought→Action→Observation 循环 |
+| Planning | [planning.md](./foundation/planning.md) | 理解任务分解和规划策略 |
 
-| 序号 | 文档 | 学习目标 |
-|------|------|----------|
-| 03 | [Skills 工具系统](./03-skills-system.md) | 理解工具定义和调用机制 |
-| 04 | [进化引擎](./04-evolution-engine.md) | 理解螺旋上升和自我改进 |
+**📖 来源文档**：`docs/Agent_Harness研究报告.md`
 
-### Phase 3: 高级特性（1-2 天）
+---
 
-| 序号 | 文档 | 学习目标 |
-|------|------|----------|
-| 05 | [Hooks 机制](./05-hooks-mechanism.md) | 理解扩展点和拦截器 |
-| 06 | [知识体系总结](./06-knowledge-map.md) | 建立完整的知识网络 |
+### 2️⃣ [memory/](./memory/) - 记忆系统
 
-### Phase 4: 进阶专题（2-3 天）
+> Agent 如何存储和检索信息
 
-| 序号 | 文档 | 学习目标 |
-|------|------|----------|
-| 07 | [Multi-Agent 协作](./07-multi-agent-collaboration.md) | 理解多 Agent 协作模式 |
-| 08 | [安全与沙箱](./08-safety-sandbox.md) | 理解代码执行安全机制 |
-| 09 | [Prompt Engineering](./09-prompt-engineering.md) | 理解系统提示词设计 |
+| 知识点 | 文件 | 学习目标 |
+|--------|------|----------|
+| 双记忆系统 | [双记忆系统.md](./memory/双记忆系统.md) | 理解长期记忆 vs 工作记忆 |
+| 工作记忆 | [工作记忆.md](./memory/工作记忆.md) | 理解会话内的临时记忆 |
+| 持久化存储 | [持久化存储.md](./memory/持久化存储.md) | 理解如何持久化 Agent 记忆 |
+
+**📖 来源文档**：`learning/02-memory-system.md`
+
+---
+
+### 3️⃣ [tools/](./tools/) - 工具平台
+
+> Agent 使用的工具和平台
+
+| 知识点 | 文件 | 学习目标 |
+|--------|------|----------|
+| OpenClaw | [openclaw.md](./tools/openclaw.md) | 掌握 Agent 网关的使用 |
+| Claude Code | [claude-code.md](./tools/claude-code.md) | 掌握终端 Agent 的使用 |
+| Skills 技能系统 | [skills.md](./tools/skills.md) | 理解技能的定义和管理 |
+| MCP 协议 | [mcp.md](./tools/mcp.md) | 理解模型上下文协议 |
+
+**📖 来源文档**：`docs/OpenClaw使用手册.md`、`docs/Claude_Code使用手册.md`
+
+---
+
+### 4️⃣ [evolution/](./evolution/) - 进化系统
+
+> Agent 如何自我改进和进化
+
+| 知识点 | 文件 | 学习目标 |
+|--------|------|----------|
+| 进化引擎 | [进化引擎.md](./evolution/进化引擎.md) | 理解螺旋上升的进化机制 |
+| EvoMap 进化网络 | [evomap.md](./evolution/evomap.md) | 理解全球 Agent 知识共享网络 |
+| 自然选择 | [自然选择.md](./evolution/自然选择.md) | 理解 GDI 评分和优胜劣汰 |
+
+**📖 来源文档**：`learning/04-evolution-engine.md`、`docs/evomap/`
+
+---
+
+### 5️⃣ [advanced/](./advanced/) - 进阶主题
+
+> 高级概念和实践
+
+| 知识点 | 文件 | 学习目标 |
+|--------|------|----------|
+| Multi-Agent 协作 | [multi-agent.md](./advanced/multi-agent.md) | 理解多 Agent 协作模式 |
+| 安全与沙箱 | [安全沙箱.md](./advanced/安全沙箱.md) | 理解代码执行安全机制 |
+| Prompt Engineering | [prompt-engineering.md](./advanced/prompt-engineering.md) | 掌握系统提示词设计 |
+| Hooks 机制 | [hooks.md](./advanced/hooks.md) | 理解扩展点和拦截器 |
+
+**📖 来源文档**：`learning/07-multi-agent-collaboration.md`、`learning/08-safety-sandbox.md`
 
 ---
 
 ## 🎓 费曼学习法
 
-每个文档都遵循费曼学习法：
-
-### 第一步：概念解释
-> "如果你不能简单地解释它，你就没有真正理解它。" —— 费曼
-
-用最简单的语言解释概念，就像教给一个完全不懂的人。
-
-### 第二步：类比理解
-用生活中的例子类比，帮助建立直觉。
-
-### 第三步：代码实现
-通过代码理解实现细节。
-
-### 第四步：知识关联
-说明这个概念与其他概念的关系。
-
-### 第五步：练习思考
-提供思考题和练习，巩固理解。
-
----
-
-## 🛠️ 项目结构
+每个知识点都遵循费曼学习法四步法：
 
 ```
-simple-bi-agent/
-├── agent/                    # Agent 核心模块
-│   ├── core.py              # 记忆管理、用户管理
-│   ├── skills.py            # Skills 管理器
-│   └── reflection.py        # ReAct 反思引擎
-│
-├── evolution/                # 进化引擎
-│   └── engine.py            # 每日/每月进化
-│
-├── skills/                   # Skills 定义
-│   ├── group_aggregate.md   # 分组聚合 Skill
-│   ├── filter_data.md       # 数据筛选 Skill
-│   └── create_chart.md      # 创建图表 Skill
-│
-├── memory/                   # 记忆系统
-│   ├── BI_RULES.md          # 全局规则
-│   └── users/               # 用户隔离记忆
-│
-├── logs/                     # 日志系统
-│   ├── daily/               # 每日日志
-│   ├── corrections/         # 纠正日志
-│   └── evolution/           # 进化报告
-│
-└── docs/                     # 文档
-    └── learning/            # 学习文档
+┌─────────────────────────────────────────────────────────────┐
+│                     费曼学习法四步法                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  第一步：概念解释                                            │
+│  ├── 用最简单的语言解释                                      │
+│  └── 就像教给一个完全不懂的人                                 │
+│                                                             │
+│  第二步：类比理解                                            │
+│  ├── 用生活中的例子类比                                      │
+│  └── 帮助建立直觉                                            │
+│                                                             │
+│  第三步：代码/实践                                           │
+│  ├── 通过代码理解实现细节                                    │
+│  └── 动手实验巩固理解                                        │
+│                                                             │
+│  第四步：知识关联                                            │
+│  ├── 说明这个概念与其他概念的关系                            │
+│  └── 建立完整的知识网络                                      │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 💡 学习建议
+## 📈 学习路径
 
-### 对于 Java 程序员
+### 推荐顺序
 
-1. **类比 Java 概念**
-   - Skills ≈ Spring 的 Bean（可管理的组件）
-   - Hooks ≈ Spring AOP（切面编程）
-   - Memory ≈ Redis（持久化存储）
-   - Evolution ≈ 定时任务 + 自学习
+```
+Week 1: 基础概念
+├── foundation/agent-定义.md
+├── foundation/agent-harness.md
+├── foundation/react-框架.md
+└── foundation/planning.md
 
-2. **关注 Python 特性**
-   - 装饰器 ≈ Java 注解
-   - 生成器 ≈ Java Stream
-   - 动态类型 ≈ Java Object
+Week 2: 记忆系统
+├── memory/双记忆系统.md
+├── memory/工作记忆.md
+└── memory/持久化存储.md
 
-3. **代码风格差异**
-   - Python 更简洁，一行顶 Java 十行
-   - 不需要显式类型声明
-   - 更多的内置函数和语法糖
+Week 3: 工具平台
+├── tools/openclaw.md
+├── tools/claude-code.md
+├── tools/skills.md
+└── tools/mcp.md
 
----
+Week 4: 进化系统
+├── evolution/进化引擎.md
+├── evolution/evomap.md
+└── evolution/自然选择.md
 
-## 📝 学习记录模板
-
-建议你在学习过程中，创建自己的学习笔记：
-
-```markdown
-# [概念名称] 学习笔记
-
-## 我的理解
-（用自己的话解释）
-
-## 类比
-（用 Java 或生活中的例子类比）
-
-## 代码实践
-（关键代码片段）
-
-## 遇到的问题
-（学习中的困惑）
-
-## 解决方案
-（如何解决的）
+Week 5: 进阶主题
+├── advanced/multi-agent.md
+├── advanced/安全沙箱.md
+├── advanced/prompt-engineering.md
+└── advanced/hooks.md
 ```
 
 ---
 
-## 🚀 开始学习
+## 📚 原始文档索引
 
-准备好了吗？让我们从 [ReAct 框架](./01-react-framework.md) 开始！
+`learning/` 目录是基于 `docs/` 原始文档的费曼学习法整理：
+
+| 原始文档 | 位置 | 衍生知识点 |
+|---------|------|-----------|
+| Agent_Harness研究报告.md | docs/ | foundation/* |
+| OpenClaw使用手册.md | docs/ | tools/openclaw.md |
+| Claude_Code使用手册.md | docs/ | tools/claude-code.md |
+| evomap/* | docs/evomap/ | evolution/evomap.md |
+| simple-bi-multi-agent-plan.md | docs/ | advanced/multi-agent.md |
+
+---
+
+_📅 更新日期：2026-03-23_
+_🐒 毛猴子整理_
