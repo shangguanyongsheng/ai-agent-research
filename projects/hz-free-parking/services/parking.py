@@ -72,8 +72,8 @@ class ParkingService:
             "location": poi.get("location", ""),
             "distance": int(poi.get("distance", 0)),
             "type": poi.get("type", ""),
-            "parking_type": poi.get("parking_type", ""),
-            "tel": poi.get("tel", ""),
+            "parking_type": poi.get("parking_type", "") or "",
+            "tel": poi.get("tel", "") if isinstance(poi.get("tel"), str) else "",
             "is_likely_free": is_likely_free,
             "free_reason": self._get_free_reason(name, poi) if is_likely_free else None,
         }
