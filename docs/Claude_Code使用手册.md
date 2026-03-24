@@ -691,14 +691,385 @@ claude /feedback
 
 ---
 
+## 7. 高级使用技巧
+
+### 7.1 斜杠命令详解
+
+#### 内置命令分类
+
+**会话管理**：
+| 命令 | 说明 |
+|------|------|
+| `/clear` | 清除对话历史（别名：`/reset`, `/new`） |
+| `/compact [instructions]` | 压缩上下文，可选指定重点 |
+| `/resume [session]` | 恢复会话（别名：`/continue`） |
+| `/rename [name]` | 重命名当前会话 |
+| `/branch [name]` | 在当前点创建会话分支（别名：`/fork`） |
+
+**项目管理**：
+| 命令 | 说明 |
+|------|------|
+| `/init` | 初始化项目，生成 CLAUDE.md |
+| `/add-dir <path>` | 添加额外工作目录 |
+| `/context` | 可视化上下文使用情况 |
+| `/diff` | 查看未提交的更改 |
+
+**调试诊断**：
+| 命令 | 说明 |
+|------|------|
+| `/doctor` | 诊断安装和配置问题 |
+| `/debug [description]` | 调试当前会话 |
+| `/status` | 查看状态信息 |
+| `/cost` | 查看 token 使用统计 |
+
+**配置管理**：
+| 命令 | 说明 |
+|------|------|
+| `/config` 或 `/settings` | 打开设置界面 |
+| `/model [model]` | 切换模型 |
+| `/permissions` | 管理权限设置 |
+| `/hooks` | 查看 hooks 配置 |
+
+### 7.2 Skills（技能）高级用法
+
+#### ⚠️ 常见误区：为什么 `/md` 不触发？
+
+**问题**：输入 `/md index.md` 没有触发任何技能。
+
+**原因分析**：
+1. **Skills 需要正确创建**：一个有效的 Skill 必须包含 `SKILL.md` 文件
+2. **位置要正确**：必须放在正确的目录下
+3. **name 字段决定命令名**：`name: md` 才会生成 `/md` 命令
+
+**正确的 Skill 创建步骤**：
+
+```bash
+# 1. 创建技能目录
+mkdir -p ~/.claude/skills/md/SKILL.md
+
+# 或者项目级技能
+mkdir -p .claude/skills/md/SKILL.md
+```
+
+```markdown
+# ~/.claude/skills/md/SKILL.md
+---
+name: md
+description: 创建 Markdown 文档
+---
+
+创建 Markdown 文档：$ARGUMENTS
+
+步骤：
+1. 分析文档需求
+2. 创建文件
+3. 添加标准格式（标题、目录、章节）
+```
+
+**验证 Skill 是否生效**：
+```bash
+# 启动 Claude Code 后输入
+/skills
+
+# 应该能看到你的 skill 列表
+```
+
+#### Skills 目录位置
+
+| 位置 | 路径 | 适用范围 |
+|------|------|----------|
+| 个人技能 | `~/.claude/skills/<name>/SKILL.md` | 所有项目 |
+| 项目技能 | `.claude/skills/<name>/SKILL.md` | 当前项目 |
+| 插件技能 | `<plugin>/skills/<name>/SKILL.md` | 插件启用时 |
+
+#### Skills 触发方式
+
+1. **手动触发**：输入 `/skill-name [args]`
+2. **自动触发**：Claude 根据 `description` 判断何时使用
+
+**控制触发行为**：
+```markdown
+---
+name: deploy
+description: 部署到生产环境
+disable-model-invocation: true  # 禁止 Claude 自动触发
+---
+```
+
+#### 内置 Skills（Bundled Skills）
+
+| Skill | 用途 |
+|-------|------|
+| `/batch <instruction>` | 并行批量处理大规模变更 |
+| `/debug [description]` | 调试当前会话 |
+| `/loop [interval] <prompt>` | 周期性执行提示 |
+| `/simplify [focus]` | 代码质量审查和优化 |
+
+### 7.3 CLAUDE.md 高级配置
+
+#### 文件位置优先级
+
+```
+1. /Library/Application Support/ClaudeCode/CLAUDE.md  (macOS 管理策略)
+   /etc/claude-code/CLAUDE.md                         (Linux 管理策略)
+   C:\Program Files\ClaudeCode\CLAUDE.md              (Windows 管理策略)
+
+2. ./CLAUDE.md 或 ./.claude/CLAUDE.md                 (项目级)
+
+3. ~/.claude/CLAUDE.md                                (用户级)
+```
+
+**优先级**：管理策略 > 项目级 > 用户级
+
+#### ⚠️ CLAUDE.md 常见问题
+
+**问题 1：Claude 不遵循我的 CLAUDE.md**
+
+**解决方案**：
+1. **检查文件大小**：保持在 200 行以内，过长会降低遵循度
+2. **使用具体指令**：
+   ```markdown
+   # ❌ 模糊
+   格式化代码
+   
+   # ✅ 具体
+   使用 2 空格缩进，语句末尾不加分号
+   ```
+3. **检查冲突**：确保没有相互矛盾的规则
+4. **验证加载**：运行 `/init` 检查是否有改进建议
+
+**问题 2：`/compact` 后指令丢失**
+
+**原因**：`/compact` 会压缩上下文，可能丢失 CLAUDE.md 中的详细说明。
+
+**解决方案**：
+- 将关键指令放在 CLAUDE.md 开头
+- 使用 `.claude/rules/` 目录拆分规则
+- 重要规则使用简洁的陈述句
+
+#### 使用 Rules 目录组织规则
+
+```
+.claude/
+├── CLAUDE.md              # 主配置
+└── rules/
+    ├── code-style.md      # 代码风格
+    ├── testing.md         # 测试规范
+    └── api-design.md      # API 设计
+```
+
+**按文件类型限定规则**：
+```markdown
+---
+paths:
+  - "src/api/**/*.ts"
+  - "src/**/*.test.ts"
+---
+
+# API 开发规则
+- 所有端点必须包含输入验证
+- 使用标准错误响应格式
+```
+
+#### 导入外部文件
+
+```markdown
+# 项目概述
+参见 @README.md
+
+# 依赖信息
+参见 @package.json
+
+# Git 工作流
+参见 @docs/git-instructions.md
+```
+
+### 7.4 Auto Memory（自动记忆）
+
+**是什么**：Claude 自动记录你的偏好和修正。
+
+**启用/禁用**：
+```bash
+/memory auto on   # 启用
+/memory auto off  # 禁用
+```
+
+**查看记忆内容**：
+```bash
+/memory
+```
+
+**存储位置**：
+```
+~/.claude/memory/<project-hash>/AUTO_MEMORY.md
+```
+
+---
+
+## 8. 常见问题排查
+
+### 8.1 Skills/命令不触发
+
+| 症状 | 可能原因 | 解决方案 |
+|------|----------|----------|
+| `/skill` 无响应 | Skill 未正确创建 | 检查 `SKILL.md` 是否存在 |
+| 命令不在列表中 | name 字段格式错误 | 使用小写字母、数字、连字符 |
+| Claude 不自动使用 | description 缺失或模糊 | 添加清晰的 description |
+| Skill 触发太频繁 | description 太宽泛 | 使 description 更具体 |
+
+**诊断步骤**：
+```bash
+# 1. 检查 Skill 是否被发现
+/skills
+
+# 2. 检查文件结构
+ls -la ~/.claude/skills/md/
+
+# 3. 验证 SKILL.md 格式
+head -20 ~/.claude/skills/md/SKILL.md
+```
+
+### 8.2 CLAUDE.md 不生效
+
+| 症状 | 可能原因 | 解决方案 |
+|------|----------|----------|
+| 规则被忽略 | 文件过长 | 精简到 200 行以内 |
+| 部分规则无效 | 规则冲突 | 检查并移除矛盾规则 |
+| 新规则不生效 | 缓存问题 | 重启 Claude Code |
+| 特定目录规则无效 | paths 配置错误 | 检查 glob 模式语法 |
+
+### 8.3 性能问题
+
+**上下文过大**：
+```bash
+# 查看上下文使用
+/context
+
+# 压缩上下文
+/compact
+
+# 或清除重新开始
+/clear
+```
+
+**搜索缓慢（WSL）**：
+```bash
+# 在 WSL 中添加项目到 Windows 索引
+# 或使用 /plan 模式减少搜索
+```
+
+### 8.4 认证问题
+
+| 错误 | 解决方案 |
+|------|----------|
+| `OAuth error: Invalid code` | 快速完成验证，或按 `c` 复制完整 URL |
+| `403 Forbidden` | 检查订阅状态，确认有 Claude Code 权限 |
+| `Not logged in` | 运行 `/login` 重新认证 |
+| WSL OAuth 失败 | 使用 `claude auth login --console` |
+
+### 8.5 安装问题速查表
+
+| 错误信息 | 解决方案 |
+|----------|----------|
+| `command not found: claude` | [将 `~/.local/bin` 添加到 PATH](#61-常见错误) |
+| `syntax error near unexpected token '<'` | 使用包管理器安装 |
+| `curl: (56) Failure writing output` | 先下载脚本，再执行 |
+| `TLS/SSL error` | 更新 CA 证书或配置代理 |
+| `Killed` on Linux | 添加 swap 空间 |
+
+---
+
+## 9. 最佳实践总结
+
+### 9.1 写好 Prompt 的公式
+
+```
+[目标] + [上下文] + [约束] + [验证标准]
+```
+
+**示例**：
+```text
+目标：为 API 添加速率限制
+上下文：参考 @src/middleware/auth.ts 的模式，使用 Redis
+约束：不引入新依赖，每用户每分钟 60 次
+验证：写测试用例模拟超限请求
+```
+
+### 9.2 CLAUDE.md 编写原则
+
+1. **简洁**：200 行以内
+2. **具体**：`npm test` 而非 "运行测试"
+3. **结构化**：使用标题和列表
+4. **无冲突**：定期审查删除过时规则
+
+### 9.3 使用 Skills 还是 CLAUDE.md？
+
+| 场景 | 推荐方式 |
+|------|----------|
+| 项目构建命令、代码风格 | CLAUDE.md |
+| 特定任务工作流（部署、PR） | Skills |
+| 按文件类型限定规则 | `.claude/rules/` |
+| 团队共享指令 | 项目级 CLAUDE.md 或 Skills |
+| 个人偏好 | `~/.claude/CLAUDE.md` |
+
+### 9.4 效率提升技巧
+
+1. **使用 Plan Mode**：复杂任务先规划再执行
+   ```bash
+   claude --permission-mode plan
+   ```
+
+2. **并行工作**：使用 git worktree
+   ```bash
+   claude --worktree feature-auth
+   ```
+
+3. **子代理隔离**：探索性任务用 subagent
+   ```text
+   > 使用 subagent 调查数据库连接池实现
+   ```
+
+4. **周期性任务**：使用 `/loop` 或 `--schedule`
+   ```text
+   /loop 5m 检查部署是否完成
+   ```
+
+---
+
+## 附录 A：快捷键速查
+
+| 快捷键 | 功能 |
+|--------|------|
+| `Shift+Tab` | 切换权限模式（Normal → Auto-Accept → Plan） |
+| `Ctrl+C` | 取消当前操作 |
+| `Ctrl+D` | 退出 Claude Code |
+| `↑` / `↓` | 浏览历史命令 |
+| `Tab` | 自动补全 |
+
+---
+
+## 附录 B：环境变量速查
+
+| 变量 | 用途 |
+|------|------|
+| `ANTHROPIC_API_KEY` | API 密钥 |
+| `CLAUDE_CODE_USE_BEDROCK` | 使用 Amazon Bedrock |
+| `CLAUDE_CODE_USE_VERTEX` | 使用 Google Vertex AI |
+| `HTTP_PROXY` / `HTTPS_PROXY` | 代理配置 |
+| `NODE_EXTRA_CA_CERTS` | 企业 CA 证书 |
+| `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD` | 加载额外目录的 CLAUDE.md |
+
+---
+
 ## 总结
 
 Claude Code 是一个强大的 AI 编程伙伴，掌握它的关键在于：
 
 1. **清晰沟通**：提供具体、明确的指令
 2. **善用上下文**：通过 CLAUDE.md 让 Claude 理解项目
-3. **分步验证**：让 Claude 验证自己的工作（测试、截图等）
-4. **管理上下文**：定期清理，使用 subagents 隔离任务
-5. **持续优化**：根据实际使用调整 CLAUDE.md 和配置
+3. **掌握 Skills**：创建正确的 SKILL.md 来扩展功能
+4. **分步验证**：让 Claude 验证自己的工作
+5. **管理上下文**：定期清理，使用 subagents 隔离任务
+6. **持续优化**：根据实际使用调整 CLAUDE.md 和配置
 
 祝你编码愉快！🚀

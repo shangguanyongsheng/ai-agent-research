@@ -49,39 +49,86 @@
 
 ---
 
-## 第三步：常用命令
+## 第三步：核心功能
 
-### 基本操作
+### 3.1 Skills（技能）— 扩展能力
 
+**⚠️ 常见问题：为什么 `/md` 不触发？**
+
+**原因**：Skills 需要正确创建，不是随便写个命令就能用。
+
+**正确创建步骤**：
 ```bash
-# 启动 Claude Code
-claude
+# 1. 创建目录
+mkdir -p ~/.claude/skills/md
 
-# 检查状态
-claude /status
+# 2. 创建 SKILL.md（必须有这个文件名！）
+cat > ~/.claude/skills/md/SKILL.md << 'EOF'
+---
+name: md
+description: 创建 Markdown 文档
+---
 
-# 切换模型
-claude /model claude-sonnet-4
+创建 Markdown 文档：$ARGUMENTS
 
-# 查看帮助
-claude /help
+步骤：
+1. 分析文档需求
+2. 创建文件
+3. 添加标准格式
+EOF
 ```
 
-### 常用任务
+**验证**：启动后输入 `/skills` 查看是否出现。
 
-```bash
-# 分析代码库
-> 给我这个项目的整体架构概览
+**Skills 目录位置**：
+| 位置 | 路径 | 适用范围 |
+|------|------|----------|
+| 个人技能 | `~/.claude/skills/<name>/SKILL.md` | 所有项目 |
+| 项目技能 | `.claude/skills/<name>/SKILL.md` | 当前项目 |
 
-# 创建项目
-> 创建一个 React + TypeScript 项目
+**关键点**：
+- 文件名必须是 `SKILL.md`（不是 `skill.md` 或其他）
+- `name` 字段决定命令名（`name: md` → `/md`）
+- `description` 帮助 Claude 判断何时自动使用
 
-# 修复 Bug
-> 修复 src/auth.ts 中的登录 Bug
+### 3.2 CLAUDE.md — 项目记忆
 
-# 写测试
-> 为 src/utils.ts 写单元测试
-```
+**作用**：让 Claude 记住项目规则、命令、约定。
+
+**位置**：
+- 项目级：`./CLAUDE.md` 或 `./.claude/CLAUDE.md`
+- 用户级：`~/.claude/CLAUDE.md`
+
+**常见问题：Claude 不遵循我的规则**
+
+**解决方案**：
+1. **文件大小**：保持在 200 行以内
+2. **具体化**：
+   ```markdown
+   # ❌ 模糊
+   格式化代码
+   
+   # ✅ 具体
+   使用 2 空格缩进，语句末尾不加分号
+   ```
+3. **结构化**：使用标题和列表
+
+### 3.3 斜杠命令速查
+
+**会话管理**：
+- `/clear` - 清除历史
+- `/compact` - 压缩上下文
+- `/resume` - 恢复会话
+
+**项目管理**：
+- `/init` - 初始化项目配置
+- `/status` - 查看状态
+- `/context` - 上下文使用情况
+
+**调试**：
+- `/doctor` - 诊断问题
+- `/debug` - 调试会话
+- `/skills` - 查看可用技能
 
 ---
 
@@ -102,43 +149,60 @@ AI Agent 知识体系
     └── Claude Code 是 Agent 的一种实现
 ```
 
+### Skills vs CLAUDE.md 选择
+
+| 场景 | 推荐方式 |
+|------|----------|
+| 构建命令、代码风格 | CLAUDE.md |
+| 特定任务工作流 | Skills |
+| 按文件类型限定 | `.claude/rules/` |
+| 团队共享 | 项目级 CLAUDE.md |
+
 ---
 
 ## 🧪 动手实验
 
-### 实验：使用 Claude Code
+### 实验 1：创建你的第一个 Skill
 
 ```bash
-# 启动
-claude
+mkdir -p ~/.claude/skills/hello
+cat > ~/.claude/skills/hello/SKILL.md << 'EOF'
+---
+name: hello
+description: 向用户打招呼
+---
 
-# 尝试任务
-> 帮我创建一个简单的 Python 脚本，读取当前目录的文件列表
-
-# 观察它如何：
-# 1. 理解需求
-# 2. 创建文件
-# 3. 写代码
-# 4. 测试运行
+你好！我是 Claude Code 的技能演示。
+你传入了参数：$ARGUMENTS
+EOF
 ```
+
+然后启动 Claude Code，输入 `/hello 世界`。
+
+### 实验 2：优化 CLAUDE.md
+
+检查你项目的 CLAUDE.md：
+1. 是否超过 200 行？
+2. 规则是否具体可验证？
+3. 有无矛盾的规则？
 
 ---
 
 ## ❓ 思考题
 
 1. Claude Code 和 OpenClaw 有什么区别？各自适合什么场景？
-2. 什么时候用代理型工具，什么时候用辅助型工具？
-3. Claude Code 的安全性如何保证？
+2. 什么时候用 Skills，什么时候用 CLAUDE.md？
+3. Skill 不触发时应该如何排查？
 
 ---
 
 ## 📚 延伸阅读
 
+- [完整使用手册](../../docs/Claude_Code使用手册.md)
 - [OpenClaw](./openclaw.md) - 聊天渠道 Agent
 - [Skills](./skills.md) - 技能系统
-- [原始文档](../../docs/Claude_Code使用手册.md) - 完整使用手册
 
 ---
 
-_📅 更新日期：2026-03-23_
+_📅 更新日期：2026-03-24_
 _🐒 毛猴子整理_
