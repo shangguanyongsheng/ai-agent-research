@@ -9,11 +9,12 @@
 | 序号 | 文件 | 内容 | 预计时长 |
 |------|------|------|----------|
 | 01 | [快速开始](01-getting-started.md) | 安装、配置、第一个任务 | 30 分钟 |
-| 02 | [核心概念](02-core-concepts.md) | 代理型编码、斜杠命令、权限模式 | 45 分钟 |
+| 02 | [核心概念](02-core-concepts.md) | 代理型编码、斜杠命令、权限模式、Auto Memory | 45 分钟 |
 | 03 | [MCP 工具连接](03-mcp-tools.md) | 连接外部工具、数据库、API | 60 分钟 |
-| 04 | [Skills 和 Hooks](04-skills-hooks.md) | 自定义工作流、自动化脚本 | 45 分钟 |
+| 04 | [Skills 和 Hooks](04-skills-hooks.md) | 内置 Skills、自定义工作流、自动化脚本 | 45 分钟 |
 | 05 | [高级功能](05-advanced.md) | 调度任务、远程控制、Channels、Agent SDK | 60 分钟 |
 | 06 | [最佳实践](06-best-practices.md) | Prompt 公式、CLAUDE.md 编写、效率技巧 | 30 分钟 |
+| 07 | [内部架构](07-internal-architecture.md) | Agentic Loop、三层架构、Context Window | 45 分钟 |
 
 ---
 
