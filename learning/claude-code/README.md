@@ -14,7 +14,9 @@
 | 04 | [Skills 和 Hooks](04-skills-hooks.md) | 内置 Skills、自定义工作流、自动化脚本 | 45 分钟 |
 | 05 | [高级功能](05-advanced.md) | 调度任务、远程控制、Channels、Agent SDK | 60 分钟 |
 | 06 | [最佳实践](06-best-practices.md) | Prompt 公式、CLAUDE.md 编写、效率技巧 | 30 分钟 |
-| 07 | [内部架构](07-internal-architecture.md) | Agentic Loop、三层架构、Context Window | 45 分钟 |
+| 07 | [内部架构深度解析](07-internal-architecture.md) | 源码泄露分析、五大子系统、设计思想 | 60 分钟 |
+| 08 | [架构导航](08-architecture-nav.md) | 架构全景图、章节导航、学习路径 | 15 分钟 |
+| 09 | [落地实践指南](09-practice-guide.md) | OpenClaw Skills 编写实战 | 30 分钟 |
 
 ---
 
@@ -120,17 +122,32 @@
 ```
                     Claude Code
                          │
-        ┌────────────────┼────────────────┐
-        │                │                │
-   核心概念           工具扩展          高级功能
-        │                │                │
-   ┌────┴────┐      ┌────┴────┐      ┌────┴────┐
-   │         │      │         │      │         │
- 代理型    权限模式  MCP      Skills  调度任务  远程控制
-   │         │      │         │      │         │
- 会话管理  Plan模式  HTTP     Hooks   Channels  Agent SDK
-           Auto    SSE      自定义   Web任务
-           Accept  Stdio    工作流   Desktop
+        ┌────────────────┼────────────────────────────┐
+        │                │                            │
+   核心概念           架构设计                      落地实践
+        │                │                            │
+   ┌────┴────┐    ┌─────┴─────┐                ┌─────┴─────┐
+   │         │    │           │                │           │
+ 代理型    权限模式 Harness    Tools           OpenClaw   Skills
+   │         │    │           │                Skills      编写
+   │         │    │           │                │           │
+会话管理  Plan模式 Sessions   ~40工具          工具封装    SKILL.md
+           Auto   Memory     Tool接口         工作流编排  references
+           Accept Context    权限控制          权限控制    scripts
+                  Window     隔离性            渐进复杂度  assets
+                             │
+                    ┌────────┴────────┐
+                    │                 │
+                Agentic Loop      Subagents
+                    │                 │
+               Query Engine      独立上下文
+               46K行代码         子代理架构
+                    │
+            ┌───────┴───────┐
+            │               │
+          MCP              Skills
+        外部服务          自定义命令
+        连接协议          工作流
 ```
 
 ---
