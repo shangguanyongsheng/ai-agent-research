@@ -22,13 +22,40 @@
 | **短回复** | 回复控制在 500 字内，避免截断 |
 | **不假设完成** | 写完一个文件不等于任务结束，继续下一步 |
 
-## 📂 文档仓库
+## 📂 目录结构规范
 
-**所有文档提交到**：https://github.com/shangguanyongsheng/ai-agent-research
+| 目录 | 定位 | 内容类型 |
+|------|------|----------|
+| **docs/** | 单一报告、调研 | 某个技术主题的深度分析报告 |
+| **learning/** | 知识库 | 系统学习的完整教材 |
 
-- 这是永久记忆，以后说到"文档"都是指这个仓库
-- 文档位置：`docs/` 目录
-- 学习笔记：`learning/` 目录
+**示例**：
+- `docs/Claude Code 源码深度分析报告.md` → 单一报告
+- `learning/claude-code/` → Claude Code 完整学习知识库
+
+**最终结构**：
+```
+docs/                           # 单一报告、调研
+├── README.md                   # 目录说明
+├── openclaw-reports/           # OpenClaw 相关报告
+├── Agent_Harness研究报告.md
+├── Claude_Code使用手册.md
+├── Claude Code 源码泄露研究报告.md
+├── Claude Code 源码深度分析报告.md
+├── AI应用落地技术分类.md
+├── evomap/
+├── inkos-integration/
+└── market-research/
+
+learning/                       # 知识库（系统学习）
+├── openclaw/                   # OpenClaw 学习知识库（15 个文档）
+├── claude-code/                # Claude Code 学习知识库（14 个文档）
+├── foundation/                 # AI Agent 基础
+├── memory/                     # 记忆系统
+├── tools/                      # 工具平台
+├── evolution/                  # 进化系统
+└── advanced/                   # 进阶主题
+```
 
 ---
 
