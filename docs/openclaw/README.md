@@ -1,185 +1,130 @@
-# OpenClaw 官方文档
+# OpenClaw 知识库
 
-> 本文档基于 OpenClaw 官方文档整理，使用费曼学习法组织内容。
-
----
-
-## 第一步：概念解释
-
-### 什么是 OpenClaw？
-
-**用最简单的话说：** OpenClaw 是一个"翻译器"，它把你在各种聊天软件（Discord、Telegram、WhatsApp 等）说的话，翻译给 AI Agent，再把 AI 的回复翻译回聊天软件。
-
-就像你雇了一个秘书，你可以在任何地方给他发消息（手机上的 WhatsApp、电脑上的 Discord），他都会帮你处理。
-
-### 核心组成部分
-
-| 组成部分 | 作用 | 类比 |
-|---------|------|------|
-| **Gateway** | 大脑中枢，协调一切 | 公司总部 |
-| **Channel** | 连接各种聊天平台 | 分公司/办事处 |
-| **Agent** | 实际干活的人 | 员工 |
-| **Node** | 手机/电脑上的 App | 员工的手机 |
+> 📝 **费曼学习法整理** - 用最简单的语言理解 OpenClaw
 
 ---
 
-## 第二步：类比理解
+## 什么是 OpenClaw？
 
-### 把 OpenClaw 想象成一个"万能客服中心"
+**一句话解释**：OpenClaw 是一个自托管网关，让你在 Discord、WhatsApp、Telegram、Slack 等聊天应用中与 AI 对话。
 
-**传统客服中心的问题：**
-- 每个平台（微信、电话、邮件）需要单独的系统
-- 客服人员分散，信息不统一
-- 换平台很麻烦
+**类比理解**：
+- 就像一个「翻译官」，连接你的聊天软件和 AI 大脑
+- 你在 WhatsApp 发消息 → OpenClaw 收到 → 转给 AI → AI 回复 → OpenClaw 送回 WhatsApp
 
-**OpenClaw 的解决方案：**
-- 一个 Gateway = 一个总控中心
-- 所有聊天平台都连到这里
-- AI Agent = 24/7 在线的超级客服
-- 你从任何平台发消息，都能得到同样的服务
+**核心特点**：
+- 🔐 **自托管** - 运行在你自己的机器上，数据不外流
+- 📱 **多通道** - 一个网关支持所有主流聊天应用
+- 🤖 **Agent原生** - 专为 AI Agent 设计，支持工具调用、记忆、多 Agent 路由
+- 📖 **开源** - MIT 许可证，社区驱动
 
 ---
 
-## 第三步：实践示例
+## 知识库导航
 
-### 快速开始（5 分钟）
+| 文档 | 内容 | 适合人群 |
+|------|------|----------|
+| [00-快速上手](./00-quickstart.md) | 5分钟完成安装和首次对话 | 新手必看 |
+| [01-安装指南](./01-installation.md) | 各平台安装方法详解 | 部署用户 |
+| [02-配置详解](./02-configuration.md) | openclaw.json 配置全解 | 配置调优 |
+| [03-Skills系统](./03-skills.md) | 技能扩展机制 | 扩展开发者 |
+| [04-MCP协议](./04-mcp.md) | Model Context Protocol | 工具集成 |
+| [05-通道集成](./05-channels.md) | Discord/WhatsApp/Telegram等 | 通道配置 |
+| [06-Gateway网关](./06-gateway.md) | 网关架构与原理 | 架构理解 |
+| [07-子Agent系统](./07-subagents.md) | 多 Agent 路由与隔离 | 多用户场景 |
+| [08-定时任务](./08-cron.md) | Cron/Hooks 自动化 | 自动化场景 |
+| [09-安全最佳实践](./09-security.md) | 认证、权限、沙箱 | 安全配置 |
+| [10-故障排查](./10-troubleshooting.md) | 常见问题与解决方案 | 运维必看 |
+| [11-社区资源](./11-community.md) | GitHub/Discord 资源 | 社区参与 |
+| [12-ClawHub Skills](./12-clawhub-skills.md) | Skills 市场推荐 | Skills使用 |
+| [13-高级模式](./13-advanced-patterns.md) | 多网关、远程部署等 | 高级用户 |
+
+---
+
+## 学习路径
+
+### 🌱 新手入门（Day 1）
+```
+00-快速上手 → 01-安装指南 → 02-配置详解 → 05-通道集成
+```
+目标：能从手机聊天软件与 AI 对话
+
+### 🚀 进阶配置（Day 2-3）
+```
+03-Skills系统 → 04-MCP协议 → 07-子Agent系统 → 09-安全最佳实践
+```
+目标：配置多 Agent、扩展技能、确保安全
+
+### 🏆 高级运维（Day 4+）
+```
+06-Gateway网关 → 08-定时任务 → 10-故障排查 → 13-高级模式
+```
+目标：生产部署、自动化、故障恢复
+
+---
+
+## 架构图解
+
+```
+┌─────────────────┐
+│  聊天应用层      │  Discord, WhatsApp, Telegram, Slack...
+│  (Channels)     │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  Gateway 网关    │  ← 核心枢纽
+│  (单进程服务)    │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  AI Agent       │  Pi / Claude Code / Codex
+│  (模型+工具)     │
+└─────────────────┘
+```
+
+**核心组件**：
+- **Gateway** - 单进程服务，监听 18789 端口
+- **Channels** - 通道插件，连接各聊天平台
+- **Agent** - AI 模型 + 工具集 + Skills
+- **Session** - 会话管理，隔离不同用户对话
+
+---
+
+## 官方资源
+
+| 资源 | 链接 | 说明 |
+|------|------|------|
+| 官方文档 | https://docs.openclaw.ai | 最权威的参考 |
+| GitHub仓库 | https://github.com/openclaw/openclaw | 源码与 Issue |
+| ClawHub | https://clawhub.ai | Skills 市场 |
+| Discord社区 | https://discord.gg/clawd | 实时讨论 |
+
+---
+
+## 快速命令参考
 
 ```bash
-# 1. 安装
-npm install -g openclaw@latest
+# 安装
+curl -fsSL https://openclaw.ai/install.sh | bash
 
-# 2. 初始化
+# 初始化
 openclaw onboard --install-daemon
 
-# 3. 打开控制面板
+# 查看状态
+openclaw gateway status
+
+# 打开控制面板
 openclaw dashboard
-```
 
-**执行流程图：**
+# 查看日志
+openclaw logs
 
-```mermaid
-flowchart LR
-    A[安装 OpenClaw] --> B[运行 onboard]
-    B --> C[配置 API Key]
-    C --> D[启动 Gateway]
-    D --> E[打开 Dashboard]
-    E --> F[发送消息测试]
-```
-
-### 三种使用方式
-
-1. **WebChat（浏览器）** - 最简单，直接在浏览器聊天
-2. **Channel（聊天平台）** - 连接 Telegram/WhatsApp 等
-3. **Node（移动 App）** - iOS/Android 专用功能（相机、语音）
-
----
-
-## 第四步：知识关联
-
-### 与其他概念的关系
-
-```mermaid
-graph TD
-    A[OpenClaw] --> B[Gateway 网关]
-    A --> C[Channels 通道]
-    A --> D[Skills 技能]
-    A --> E[MCP 协议]
-    
-    B --> B1[配置管理]
-    B --> B2[会话管理]
-    B --> B3[健康监控]
-    
-    C --> C1[Telegram]
-    C --> C2[WhatsApp]
-    C --> C3[Discord]
-    C --> C4[...更多]
-    
-    D --> D1[扩展能力]
-    D --> D2[定制功能]
-    
-    E --> E1[外部工具]
-    E --> E2[标准协议]
+# 健康检查
+openclaw doctor
 ```
 
 ---
 
-## 文档导航
-
-| 文档 | 内容 | 适用场景 |
-|------|------|---------|
-| [01-安装指南](./01-安装指南.md) | 5 分钟快速安装 | 新手入门 |
-| [02-配置指南](./02-配置指南.md) | 配置文件详解 | 定制化设置 |
-| [03-Skills技能](./03-Skills技能.md) | 扩展 Agent 能力 | 功能扩展 |
-| [04-MCP协议](./04-MCP协议.md) | MCP 协议支持 | 工具集成 |
-| [05-Channels通道](./05-Channels通道.md) | 聊天平台支持 | 多平台部署 |
-| [06-Gateway网关](./06-Gateway网关.md) | 运维与监控 | 系统管理 |
-
----
-
-## 关键特性一览
-
-### 🌐 多平台支持
-
-**内置通道：**
-- Discord、iMessage、Signal、Slack、Telegram、WhatsApp
-- Google Chat、Microsoft Teams、Feishu
-- Matrix、Mattermost、IRC、Nostr
-
-**插件通道：**
-- Zalo、LINE、Twitch、Tlon、Synology Chat
-
-### 🔧 Agent 能力
-
-| 能力 | 说明 |
-|------|------|
-| **工具调用** | 执行 shell 命令、文件操作 |
-| **网络搜索** | DuckDuckGo、Perplexity 等 |
-| **浏览器控制** | 自动化网页操作 |
-| **Skills 扩展** | 通过技能文件扩展能力 |
-| **MCP 协议** | 标准化工具协议支持 |
-
-### 📱 移动端功能
-
-- **Canvas** - 屏幕共享和协作
-- **Camera** - 拍照分析
-- **Voice Wake** - 语音唤醒
-- **Talk Mode** - 语音对话模式
-
----
-
-## 常见问题
-
-### Q1: OpenClaw 和直接用 AI API 有什么区别？
-
-| 对比项 | 直接用 API | OpenClaw |
-|--------|-----------|----------|
-| 访问方式 | 只能通过代码/API | 聊天软件直接对话 |
-| 多平台 | 需要自己集成 | 一键连接多个平台 |
-| 会话管理 | 手动维护 | 自动管理 |
-| 工具调用 | 需要自己开发 | 内置 Skills/MCP |
-| 成本 | API 费用 | API 费用（无额外费用） |
-
-### Q2: 需要什么技术基础？
-
-- **最低要求：** 会用命令行，能运行几行命令
-- **进阶使用：** 了解 JSON 配置文件
-- **高级定制：** 了解 TypeScript/Node.js
-
-### Q3: 数据安全吗？
-
-- **自托管** - 所有数据都在你自己的机器上
-- **开源** - MIT 许可，代码完全透明
-- **本地存储** - 会话、配置都在本地
-- **API 调用** - 只有 AI API 调用会发到外部
-
----
-
-## 快速链接
-
-- 📚 官方文档: https://docs.openclaw.ai
-- 💻 GitHub: https://github.com/openclaw/openclaw
-- 💬 社区支持: Discord/Telegram
-
----
-
-> 最后更新：2026-04-10 | 来源：https://docs.openclaw.ai
+> 💡 **提示**：建议按顺序阅读，每个文档都采用费曼学习法编写，循序渐进。
