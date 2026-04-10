@@ -146,6 +146,50 @@
 
 ---
 
+### 2026-04-10：子 Agent 超时根因与解决
+
+**问题**：doc-agent 频繁超时（即使设置了 10 分钟超时）
+
+**根因**：
+1. **任务太大**：一次完成 14 个文档，工作量大
+2. **没有分步**：一口气执行，没有边做边汇报
+3. **超时机制**：子进程有 `runTimeoutSeconds` 限制（默认可能较短）
+
+**配置解决**：
+```json
+{
+  "agents": {
+    "defaults": {
+      "timeoutSeconds": 600,
+      "subagents": {
+        "runTimeoutSeconds": 1800  // 30 分钟
+      }
+    }
+  }
+}
+```
+
+**任务拆分**：
+```
+错误：一次完成 14 个文档
+正确：分批执行
+  - 第一批：00-04 文档
+  - 第二批：05-09 文档
+  - 第三批：10-13 文档
+```
+
+**派发任务最佳实践**：
+```javascript
+sessions_spawn({
+  agentId: "doc-agent",
+  cwd: "/home/admin/.openclaw/workspace",  // 共享目录
+  task: "每写完一个文档就汇报，分批执行",
+  runTimeoutSeconds: 600  // 显式指定
+})
+```
+
+---
+
 ### 2026-04-10：子 Agent 工作目录隔离问题
 
 **场景**：派发任务给 doc-agent，完成后看不到文件。
