@@ -146,6 +146,36 @@
 
 ---
 
+### 2026-04-10：子 Agent 工作目录隔离问题
+
+**场景**：派发任务给 doc-agent，完成后看不到文件。
+
+**误解**：以为 Agent 谎报完成。
+
+**真相**：
+- 每个 Agent 有独立的 workspace
+- doc-agent → `workspace-doc-agent/`
+- main → `workspace/`
+- Agent 确实完成了，文件在它自己的目录
+
+**根因**：sessions_spawn 默认使用 agent 自己的 workspace，文件隔离。
+
+**解决方案**：派发任务时指定 `cwd` 参数：
+```javascript
+sessions_spawn({
+  agentId: "doc-agent",
+  cwd: "/home/admin/.openclaw/workspace",  // 共享目录
+  task: "..."
+})
+```
+
+**或复制文件**：
+```bash
+cp -r ~/.openclaw/workspace-doc-agent/docs/openclaw/* ~/.openclaw/workspace/docs/openclaw/
+```
+
+---
+
 ### ~~2026-03-26：浏览器截图超时~~ ✅ 已过时
 
 > 此问题已超过 3 周，可能已解决或不再相关。如再遇到再记录。
