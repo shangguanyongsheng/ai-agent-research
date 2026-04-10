@@ -18,6 +18,10 @@
 | 08 | [架构导航](08-architecture-nav.md) | 架构全景图、章节导航、学习路径 | 15 分钟 |
 | 09 | [落地实践指南](09-practice-guide.md) | OpenClaw Skills 编写实战 | 30 分钟 |
 | 10 | [官方学习资源](10-official-resources.md) | Cookbook、工程博客、社区资源 | 30 分钟 |
+| 11 | [Auto Mode 深度解析](11-auto-mode-deep-dive.md) | 安全机制、两层防御、威胁模型 | 45 分钟 |
+| 12 | [Agent Patterns 工作流](12-agent-patterns.md) | 5种核心模式、选择决策树 | 60 分钟 |
+| 13 | [构建有效 Agent](13-effective-agents.md) | 设计原则、工具设计、何时使用 | 30 分钟 |
+| 14 | [威胁情报 Agent](14-threat-intel-agent.md) | IOC 调查实战、SIEM/SOAR 集成 | 45 分钟 |
 
 ---
 
