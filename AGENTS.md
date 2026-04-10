@@ -45,9 +45,40 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - When you make a mistake → document it so future-you doesn't repeat it
 - **Text > Brain** 📝
 
-## Red Lines
+## 工作流程规范
 
-- Don't exfiltrate private data. Ever.
+### 进度反馈机制
+
+| 规则 | 说明 |
+|------|------|
+| **边做边说** | 超过 5 分钟的任务每步汇报，5 分钟内完成直接给结果 |
+| **进度文件** | 长任务执行时更新 PROGRESS.md，用户随时可查 |
+| **卡住上报** | 超过 2 分钟没进展，立即告诉用户 |
+| **短回复** | 回复控制在 500 字内，避免截断 |
+| **不假设完成** | 写完一个文件不等于任务结束，继续下一步 |
+
+**PROGRESS.md 标准格式**：
+
+```markdown
+# 当前任务进度
+
+> 最后更新：YYYY-MM-DD HH:MM
+
+## 状态
+
+**当前**：正在执行的任务
+**状态**：进行中 / 等待 / 完成
+
+## 进度
+
+- [x] 已完成的步骤 1
+- [ ] 正在执行的步骤 2
+- [ ] 待执行的步骤 3
+```
+
+---
+
+
 - Don't run destructive commands without asking.
 - `trash` > `rm` (recoverable beats gone forever)
 - When in doubt, ask.
