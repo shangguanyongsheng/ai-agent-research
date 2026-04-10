@@ -17,6 +17,7 @@
 | 07 | [内部架构深度解析](07-internal-architecture.md) | 源码泄露分析、五大子系统、设计思想 | 60 分钟 |
 | 08 | [架构导航](08-architecture-nav.md) | 架构全景图、章节导航、学习路径 | 15 分钟 |
 | 09 | [落地实践指南](09-practice-guide.md) | OpenClaw Skills 编写实战 | 30 分钟 |
+| 10 | [官方学习资源](10-official-resources.md) | Cookbook、工程博客、社区资源 | 30 分钟 |
 
 ---
 
@@ -88,6 +89,10 @@
 | MCP 文档 | https://code.claude.com/docs/en/mcp |
 | CLI 参考 | https://code.claude.com/docs/en/cli-reference |
 | 最佳实践 | https://code.claude.com/docs/en/best-practices |
+| Cookbook 示例库 | https://platform.claude.com/cookbook |
+| 工程博客 | https://www.anthropic.com/engineering |
+
+> 📚 详细的学习资源指南，请参阅 [10-official-resources.md](10-official-resources.md)
 
 ---
 
