@@ -1,272 +1,306 @@
-# OpenClaw MCP 协议
+# OpenClaw MCP 协议支持
 
-> 使用费曼学习法：理解 Model Context Protocol 的两种用法。
+> MCP 是 Agent 与外部工具的"通用语言"。
 
-## 📖 概念解释
+---
 
-**什么是 MCP？**
+## 第一步：概念解释
 
-MCP (Model Context Protocol) 是一个标准协议，用于：
-1. AI 应用连接外部工具和数据源
-2. 工具/数据源向 AI 应用暴露能力
+### 什么是 MCP？
 
-OpenClaw 支持两种 MCP 角色：
-- **作为 MCP 服务器**：让其他 AI 应用（如 Claude Code）连接 OpenClaw
-- **作为 MCP 客户端**：连接其他 MCP 服务器获取工具
+**用最简单的话说：** MCP（Model Context Protocol）是一个"标准接口"，让 Agent 能和各种外部工具对话。
 
-## 🎯 类比理解
+就像 USB 接口：
+- USB 是标准 → 各种设备都能连接电脑
+- MCP 是标准 → 各种工具都能连接 Agent
 
-**把 MCP 想象成"通用电源插座"**
+### MCP 的两种角色
 
-- 不同电器（AI 应用）需要插头才能使用电源（工具）
-- MCP 定义了标准插头形状
-- OpenClaw 可以：
-  - 提供"插座"（作为服务器，让其他应用插入）
-  - 使用"插头"（作为客户端，插入其他服务器）
+| 角色 | OpenClaw 的作用 | 类比 |
+|------|----------------|------|
+| **MCP Server** | 提供工具给其他应用 | "服务员" |
+| **MCP Client** | 使用其他 MCP Server 的工具 | "顾客" |
 
-就像 USB 是通用接口，MCP 是 AI 工具的通用接口。
+---
 
-## 🔧 实践示例
+## 第二步：类比理解
 
-### OpenClaw 作为 MCP 服务器
+### 把 MCP 想象成"餐厅点餐系统"
 
-**场景：** Claude Code、Codex 等需要访问 OpenClaw 的聊天通道。
-
-#### 启动 MCP 服务器
-
-```bash
-# 本地 Gateway
-openclaw mcp serve
-
-# 远程 Gateway
-openclaw mcp serve --url wss://gateway-host:18789 --token-file ~/.openclaw/gateway.token
-
-# 启用 Claude 通道通知
-openclaw mcp serve --claude-channel-mode on
+```mermaid
+flowchart LR
+    subgraph "OpenClaw 作为 Server"
+        A1[Claude Code] --> B1[MCP 协议]
+        B1 --> C1[OpenClaw]
+        C1 --> D1[Channel 连接]
+    end
+    
+    subgraph "OpenClaw 作为 Client"
+        A2[OpenClaw Agent] --> B2[MCP 协议]
+        B2 --> C2[外部 MCP Server]
+        C2 --> D2[外部工具]
+    end
 ```
 
-#### MCP 客户端配置
+| 类比 | MCP 角色 | 实际作用 |
+|------|---------|---------|
+| **餐厅服务员** | MCP Server | 接单、上菜（提供工具） |
+| **顾客** | MCP Client | 点餐（使用工具） |
+| **菜单** | Tools List | 可用的工具列表 |
+| **点餐单** | Tool Call | 调用具体工具 |
+| **菜品** | Tool Result | 工具返回结果 |
 
-在 Claude Code 或其他 MCP 客户端的配置中：
+---
+
+## 第三步：实践示例
+
+### OpenClaw 作为 MCP Server
+
+**用途：** 让其他应用（如 Claude Code）连接 OpenClaw 的聊天通道
+
+```bash
+# 启动 MCP Server
+openclaw mcp serve
+```
+
+**配置其他应用连接：**
 
 ```json
+// Claude Code 配置
 {
   "mcpServers": {
     "openclaw": {
       "command": "openclaw",
-      "args": [
-        "mcp",
-        "serve",
-        "--url",
-        "wss://gateway-host:18789",
-        "--token-file",
-        "/path/to/gateway.token"
-      ]
+      "args": ["mcp", "serve"]
     }
   }
 }
 ```
 
-#### MCP 工具列表
+**MCP Server 提供的工具：**
 
-`openclaw mcp serve` 提供的工具：
+| 工具 | 功能 | 说明 |
+|------|------|------|
+| `conversations_list` | 列出对话 | 查看所有聊天 |
+| `messages_read` | 读消息 | 获取历史记录 |
+| `events_poll` | 拉取事件 | 获取新消息 |
+| `messages_send` | 发消息 | 回复对话 |
+| `permissions_respond` | 处理审批 | 批准/拒绝请求 |
 
-| 工具 | 说明 |
-|------|------|
-| `conversations_list` | 列出最近会话 |
-| `conversation_get` | 获取单个会话详情 |
-| `messages_read` | 读取消息历史 |
-| `attachments_fetch` | 获取附件元数据 |
-| `events_poll` | 获取排队事件 |
-| `events_wait` | 等待新事件 |
-| `messages_send` | 发送消息回复 |
-| `permissions_list_open` | 列出待审批请求 |
-| `permissions_respond` | 处理审批请求 |
+### OpenClaw 作为 MCP Client
 
-#### Claude 通道模式
+**用途：** 让 Agent 使用外部 MCP Server 的工具
 
-当启用 Claude 通道模式：
-- 标准 MCP 工具仍可用
-- 新消息作为 Claude 特定通知推送
-- 支持权限请求通知
-
-**通知类型：**
-- `notifications/claude/channel` — 新消息
-- `notifications/claude/channel/permission` — 权限请求
-
-### OpenClaw 作为 MCP 客户端
-
-**场景：** OpenClaw Agent 需要使用其他 MCP 服务器提供的工具。
-
-#### 管理 MCP 服务器定义
+**配置 MCP Server：**
 
 ```bash
-# 列出已配置的 MCP 服务器
-openclaw mcp list
-
-# 查看某个服务器详情
-openclaw mcp show context7 --json
-
-# 添加 MCP 服务器
+# 添加 MCP Server 定义
 openclaw mcp set context7 '{"command":"uvx","args":["context7-mcp"]}'
 openclaw mcp set docs '{"url":"https://mcp.example.com"}'
-
-# 删除 MCP 服务器
-openclaw mcp unset context7
 ```
 
-#### 配置文件结构
+**配置文件：**
 
 ```json5
 {
   mcp: {
     servers: {
       "context7": {
-        command: "uvx",
-        args: ["context7-mcp"],
+        "command": "uvx",
+        "args": ["context7-mcp"]
       },
-      "remote-tools": {
-        url: "https://mcp.example.com",
-        headers: { "Authorization": "Bearer <token>" },
-      },
-    },
-  },
+      "docs": {
+        "url": "https://mcp.example.com"
+      }
+    }
+  }
 }
 ```
-
-#### 传输类型
-
-**stdio（本地进程）：**
-
-```json5
-{
-  command: "uvx",           // 可执行文件
-  args: ["context7-mcp"],   // 参数
-  env: { "API_KEY": "..." }, // 环境变量
-  cwd: "/path/to/work",     // 工作目录
-}
-```
-
-**SSE（远程 HTTP）：**
-
-```json5
-{
-  url: "https://mcp.example.com", // 远程服务器
-  headers: { "Authorization": "Bearer token" },
-  connectionTimeoutMs: 10000,
-}
-```
-
-**Streamable HTTP：**
-
-```json5
-{
-  url: "https://mcp.example.com/stream",
-  transport: "streamable-http",  // 指定传输类型
-  headers: { "Authorization": "Bearer token" },
-}
-```
-
-### 工作流程
-
-#### 服务器模式流程
-
-```
-MCP 客户端 (Claude Code)
-      ↓ spawn process
-openclaw mcp serve
-      ↓ WebSocket
-OpenClaw Gateway
-      ↓
-聊天通道 (WhatsApp/Telegram)
-```
-
-1. MCP 客户端启动 `openclaw mcp serve`
-2. 桥接连接到 Gateway
-3. Gateway 会话变为 MCP 会话
-4. 实时事件排队到内存
-5. MCP 工具提供访问接口
-
-#### 客户端模式流程
-
-```
-OpenClaw Agent
-      ↓
-Gateway (读取 mcp.servers 配置)
-      ↓
-连接 MCP 服务器
-      ↓
-获取工具列表
-```
-
-1. Agent 需要外部工具
-2. Gateway 读取 MCP 配置
-3. 连接配置的服务器
-4. 工具暴露给 Agent
-
-## 🔗 知识关联
-
-### MCP 与其他概念
-
-| 概念 | 与 MCP 的关系 |
-|------|---------------|
-| Skills | Skills 教 Agent 使用 MCP 工具 |
-| Gateway | Gateway 管理 MCP 连接 |
-| Channels | MCP 服务器暴露 Channel 会话 |
-| Tools | MCP 工具是 Tools 的一种来源 |
-
-### MCP vs ACP
-
-| 功能 | MCP | ACP |
-|------|-----|-----|
-| OpenClaw 托管运行时 | ❌ | ✅ |
-| 连接外部通道 | ✅ | ❌ |
-| 标准 AI 协议 | ✅ | ✅ |
-
-**使用 MCP：** 其他 AI 应用需要访问 OpenClaw 通道
-**使用 ACP：** OpenClaw 托管编码 Agent 运行时
-
-```bash
-# MCP：OpenClaw 作为桥梁
-openclaw mcp serve
-
-# ACP：OpenClaw 托管 Agent
-openclaw acp
-```
-
-## ⚠️ 重要限制
-
-### 服务器模式限制
-
-| 限制 | 说明 |
-|------|------|
-| 会话发现 | 需要 Gateway 已有路由元数据 |
-| 事件队列 | 仅连接时存在，断开后消失 |
-| 推送 | 仅 Claude 特定模式 |
-| 审批列表 | 仅当前连接期间观察到的 |
-
-### 客户端模式限制
-
-- `mcp set/unset` 只修改配置
-- 不验证服务器可达性
-- 运行时适配器决定支持哪些传输
-
-## 📝 总结
-
-MCP 是 AI 工具的"通用插座"：
-
-**OpenClaw 作为服务器：**
-- 让 Claude Code 等访问聊天通道
-- 提供 `conversations_list`, `messages_send` 等工具
-- 支持 Claude 特定通知模式
-
-**OpenClaw 作为客户端：**
-- 连接其他 MCP 服务器获取工具
-- 支持 stdio、SSE、streamable-http 传输
-- 配置存储在 `mcp.servers`
-
-下一步：[Channels 通道](./05-Channels通道.md) → 学习支持的聊天平台。
 
 ---
 
-*费曼学习法：概念解释 → 类比理解 → 实践示例 → 知识关联*
+### 传输类型
+
+| 类型 | 配置方式 | 适用场景 |
+|------|---------|---------|
+| **stdio** | `command` + `args` | 本地命令行工具 |
+| **SSE** | `url` | 远程 HTTP 服务 |
+| **streamable-http** | `url` + `transport` | HTTP 流式传输 |
+
+**stdio 示例（本地工具）：**
+```json5
+{
+  command: "uvx",
+  args: ["context7-mcp"],
+  env: { API_KEY: "..." }
+}
+```
+
+**SSE 示例（远程服务）：**
+```json5
+{
+  url: "https://mcp.example.com",
+  headers: { "Authorization": "Bearer token" }
+}
+```
+
+---
+
+### Claude Channel Mode
+
+**特殊功能：** 让 Claude Code 能接收实时推送
+
+```bash
+# 启用 Claude 推送模式
+openclaw mcp serve --claude-channel-mode on
+```
+
+| 模式 | 说明 |
+|------|------|
+| `off` | 只用标准 MCP 工具 |
+| `on` | 启用 Claude 推送 |
+| `auto` | 自动检测（默认） |
+
+---
+
+## 第四步：知识关联
+
+### MCP 与 Skills 的对比
+
+```mermaid
+graph TD
+    A[扩展 Agent 能力] --> B[Skills]
+    A --> C[MCP 协议]
+    
+    B --> B1[简单配置]
+    B --> B2[本地定义]
+    B --> B3[教学文档]
+    
+    C --> C1[标准协议]
+    C --> C2[可连接远程]
+    C --> C3[工具列表]
+```
+
+| 对比项 | Skills | MCP |
+|--------|--------|-----|
+| **定义方式** | SKILL.md 文件 | JSON 配置 |
+| **协议** | 自定义 | 标准协议 |
+| **远程** | 不支持 | 支持 |
+| **复杂度** | 简单 | 中等 |
+| **适用场景** | 本地工具 | 外部服务 |
+
+### MCP 工具类型
+
+| 类型 | 说明 | 示例 |
+|------|------|------|
+| **resources** | 可读取的资源 | 文件、数据库 |
+| **tools** | 可调用的函数 | 搜索、执行 |
+| **prompts** | 预定义的提示 | 模板消息 |
+
+---
+
+## 常用 MCP Server
+
+### 本地 MCP Server
+
+| Server | 功能 | 安装命令 |
+|--------|------|---------|
+| context7 | 上下文管理 | `uvx context7-mcp` |
+| filesystem | 文件操作 | `npx @anthropic/mcp-server-filesystem` |
+| puppeteer | 浏览器控制 | `npx @anthropic/mcp-server-puppeteer` |
+
+### 远程 MCP Server
+
+| Server | 功能 | URL 格式 |
+|--------|------|---------|
+| Custom API | 自定义工具 | `https://your-api.com/mcp` |
+| Memory | 记忆服务 | `https://memory-server.com` |
+
+---
+
+## 安全考量
+
+⚠️ **MCP 安全注意事项：**
+
+| 风险 | 防护措施 |
+|------|---------|
+| **远程连接** | 使用 HTTPS + 认证 |
+| **敏感数据** | 不要在 URL 中传密码 |
+| **权限控制** | 限制工具调用范围 |
+
+**推荐做法：**
+
+```json5
+{
+  url: "https://mcp.example.com",
+  headers: {
+    "Authorization": "Bearer ${MCP_TOKEN}"  // 用环境变量
+  }
+}
+```
+
+---
+
+## 常见问题
+
+### Q1: MCP Server 连不上？
+
+检查：
+1. `command` 是否正确
+2. 环境变量是否设置
+3. 网络是否可达（远程）
+
+```bash
+# 查看 MCP Server 列表
+openclaw mcp list
+
+# 查看 Gateway 状态
+openclaw gateway status
+```
+
+### Q2: MCP vs Skills，用哪个？
+
+| 情况 | 推荐 |
+|------|------|
+| 本地工具，简单教学 | Skills |
+| 外部服务，标准协议 | MCP |
+| 已有 MCP Server | MCP |
+| 想自定义教学 | Skills |
+
+### Q3: 如何测试 MCP 连接？
+
+```bash
+# 启动 MCP Server 测试
+openclaw mcp serve --verbose
+
+# 查看 MCP 配置
+openclaw mcp show <name>
+```
+
+---
+
+## 相关命令
+
+```bash
+# MCP Server 管理
+openclaw mcp list              # 列出所有 MCP Server
+openclaw mcp show <name>       # 查看详情
+openclaw mcp set <name> <json> # 设置 MCP Server
+openclaw mcp unset <name>      # 删除 MCP Server
+
+# MCP Server 模式
+openclaw mcp serve             # 启动 MCP Server
+openclaw mcp serve --verbose   # 详细日志
+```
+
+---
+
+## 下一步
+
+1. ✅ 查看 [MCP CLI 文档](https://docs.openclaw.ai/cli/mcp)
+2. ✅ 了解 [Skills](./03-Skills技能.md) 作为替代方案
+3. ✅ 浏览 [MCP Server 列表](https://github.com/anthropics/mcp)
+
+---
+
+> 最后更新：2026-04-10 | 来源：https://docs.openclaw.ai/cli/mcp

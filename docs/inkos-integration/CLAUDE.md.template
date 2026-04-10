@@ -1,0 +1,88 @@
+# InkOS Integration for Claude Code
+
+## Overview
+This template provides instructions for Claude Code to integrate with InkOS capabilities for novel writing. Copy this template and customize it for your specific project.
+
+## Setup Instructions
+1. Install InkOS from https://github.com/Narcooo/inkos
+2. Initialize your project directory with `inkos init`
+3. Place your truth files in the project root (see templates below)
+4. Reference this CLAUDE.md file when working with Claude Code
+
+## Core Capabilities
+
+### 1. Chapter Planning (Architect Agent)
+When planning new chapters, use the following structure:
+- Reference `chapter_summaries.md` for existing chapter context
+- Consult `subplot_board.md` for active subplots that need advancement
+- Check `emotional_arcs.md` for character emotional states
+- Use `character_matrix.md` to understand character relationships
+
+**Claude Instruction**: "Plan a new chapter outline considering the current story state, active subplots, character emotional arcs, and relationship dynamics."
+
+### 2. Content Generation (Writer Agent)
+For generating chapter content, follow the two-stage approach:
+- **Creative Phase** (temperature 0.7): Generate initial draft with creative freedom
+- **Settlement Phase** (temperature 0.3): Refine draft for consistency and quality
+
+**Claude Instruction**: "Write [CHAPTER_TITLE] following the two-stage approach: first generate a creative draft focusing on [KEY_ELEMENTS], then refine it for consistency with the established world state and character development."
+
+### 3. Continuity Auditing (Auditor Agent)
+Before finalizing any content, perform a 33-dimension continuity check:
+- World state consistency (`current_state.md`)
+- Resource tracking (`particle_ledger.md`)
+- Plot hook management (`pending_hooks.md`)
+- Character consistency (`character_matrix.md`)
+- Emotional arc progression (`emotional_arcs.md`)
+
+**Claude Instruction**: "Audit the generated content against all truth files for continuity across 33 dimensions including world state, resources, plot hooks, character consistency, and emotional arcs."
+
+### 4. Revision (Reviser Agent)
+Address any continuity issues identified by the Auditor:
+- Fix inconsistencies with world state
+- Resolve resource discrepancies
+- Close or properly track plot hooks
+- Adjust character behavior to match established patterns
+- Ensure emotional arc progression is natural
+
+**Claude Instruction**: "Revise the content to address all continuity issues identified in the audit, ensuring perfect alignment with the truth files."
+
+### 5. Style and Quality Enhancement
+Apply these additional capabilities as needed:
+
+**De-AI Detection**: "Review the text for AI-like patterns and rewrite to sound more human-authored."
+
+**Style Emulation**: "Rewrite this passage to match the style of [AUTHOR_NAME]."
+
+**Continuation**: "Continue this existing work maintaining the established tone, style, and narrative voice."
+
+**Fandom Creation**: "Create content in [FANDOM] universe following one of these modes: Canon-compliant, AU (Alternate Universe), Crossover, or Meta."
+
+## Truth Files Reference
+Always consult these files before generating content:
+
+- `current_state.md`: Current world state and timeline
+- `particle_ledger.md`: Resource inventory and transactions  
+- `pending_hooks.md`: Open plot threads requiring resolution
+- `chapter_summaries.md`: Summary of all completed chapters
+- `subplot_board.md`: Status of all active subplots
+- `emotional_arcs.md`: Character emotional journey tracking
+- `character_matrix.md`: Character relationships and interactions
+
+## Output Format
+When generating final content for EPUB export:
+- Use proper Markdown formatting
+- Include chapter titles with # headers
+- Mark scene breaks with ***
+- Ensure proper paragraph spacing
+
+## CLI Integration
+For advanced workflows, you can call InkOS CLI commands directly:
+- `inkos architect --json` - Get chapter plan in JSON format
+- `inkos writer --creative --temp 0.7` - Creative writing phase
+- `inkos writer --settlement --temp 0.3` - Settlement writing phase  
+- `inkos auditor --dimensions 33` - Full continuity audit
+- `inkos reviser --fix-all` - Automatic revision
+- `inkos export --epub` - Generate EPUB file
+
+Remember to always maintain consistency with the truth files and follow the two-stage writing process for optimal results.

@@ -45,6 +45,39 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - When you make a mistake → document it so future-you doesn't repeat it
 - **Text > Brain** 📝
 
+## 工作流程规范
+
+### 进度反馈机制
+
+| 规则 | 说明 |
+|------|------|
+| **边做边说** | 超过 5 分钟的任务每步汇报，5 分钟内完成直接给结果 |
+| **进度文件** | 长任务执行时更新 PROGRESS.md，用户随时可查 |
+| **卡住上报** | 超过 2 分钟没进展，立即告诉用户 |
+| **短回复** | 回复控制在 500 字内，避免截断 |
+| **不假设完成** | 写完一个文件不等于任务结束，继续下一步 |
+
+**PROGRESS.md 标准格式**：
+
+```markdown
+# 当前任务进度
+
+> 最后更新：YYYY-MM-DD HH:MM
+
+## 状态
+
+**当前**：正在执行的任务
+**状态**：进行中 / 等待 / 完成
+
+## 进度
+
+- [x] 已完成的步骤 1
+- [ ] 正在执行的步骤 2
+- [ ] 待执行的步骤 3
+```
+
+---
+
 ## Red Lines
 
 - Don't exfiltrate private data. Ever.
@@ -210,3 +243,109 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 ## Make It Yours
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
+
+---
+
+## 📚 文档 Agent 能力
+
+### 项目定位
+
+当前 workspace 同时是 **ai-agent-research** 文档仓库，你是一个**文档 Agent**。
+
+### 核心能力
+
+```
+用户输入（名词/URL）
+        │
+        ▼
+┌───────────────────┐
+│    Step 1: 调研    │
+│  搜索/访问/学习    │
+└───────────────────┘
+        │
+        ▼
+┌───────────────────┐
+│   Step 2: 生成报告  │
+│   写入 docs/       │
+└───────────────────┘
+        │
+        ▼
+┌───────────────────┐
+│ Step 3: 知识图谱   │
+│ 写入 learning/    │
+└───────────────────┘
+```
+
+### 触发条件
+
+当用户说：
+- "调研 XXX"
+- "学习 XXX"
+- "研究一下 XXX"
+- "帮我了解 XXX"
+
+### 执行流程
+
+**Step 1: 调研**
+```bash
+# 如果是 URL
+web_fetch → 获取内容 → 理解
+
+# 如果是名词/概念
+web_search → 搜索 → 阅读多个来源 → 综合
+```
+
+**Step 2: 生成报告**
+```
+docs/
+├── [主题]研究报告.md    # 研究报告
+├── [主题]使用手册.md    # 如果是工具/产品
+└── evomap/             # 如果是 EvoMap 相关
+```
+
+**Step 3: 知识图谱**
+```
+learning/
+├── foundation/         # 基础概念
+├── memory/            # 记忆系统
+├── tools/             # 工具平台
+├── evolution/         # 进化系统
+└── advanced/          # 进阶主题
+```
+
+### 费曼学习法模板
+
+每个知识点必须包含：
+
+```markdown
+## 第一步：概念解释
+用最简单的语言解释，像教给小孩。
+
+## 第二步：类比理解
+用生活中的例子类比。
+
+## 第三步：代码/实践
+动手实验或代码示例。
+
+## 第四步：知识关联
+与其他概念的关系，建立知识网络。
+```
+
+### 知识分支路由
+
+| 关键词 | 分支 |
+|--------|------|
+| Agent, Harness, ReAct, Thought, Action, Planning | `foundation/` |
+| Memory, 记忆, 存储, 持久化, 工作记忆 | `memory/` |
+| OpenClaw, Claude Code, Skill, MCP, Tool, 工具 | `tools/` |
+| Evolution, 进化, EvoMap, GDI, Gene, Capsule | `evolution/` |
+| Multi-Agent, 协作, Safety, 沙箱, Prompt | `advanced/` |
+
+### 提交规范
+
+完成后必须提交到 GitHub：
+```bash
+git add docs/ learning/
+git commit -m "docs: 调研 [主题] 并整理知识图谱"
+git push
+```

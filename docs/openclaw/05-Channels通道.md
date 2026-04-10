@@ -1,159 +1,168 @@
-# OpenClaw Channels 通道
+# OpenClaw Channels 通道系统
 
-> 使用费曼学习法：理解如何连接各种聊天平台。
+> Channels 是 Agent 与用户对话的"桥梁"。
 
-## 📖 概念解释
+---
 
-**什么是 Channel？**
+## 第一步：概念解释
 
-Channel 是 OpenClaw 与聊天平台之间的连接器。每个 Channel 负责：
-1. 接收来自聊天平台的消息
-2. 转发给 Gateway 处理
-3. 将 AI 回复发送回平台
+### 什么是 Channel？
 
-支持的 Channel 包括：Telegram、WhatsApp、Discord、Slack、Signal、iMessage 等。
+**用最简单的话说：** Channel 是一个"通信通道"，让 Agent 能在各种聊天平台上和你对话。
 
-## 🎯 类比理解
+就像你有多个电话号码：
+- WhatsApp 号码 → WhatsApp Channel
+- Telegram 账号 → Telegram Channel
+- Discord 账号 → Discord Channel
 
-**把 Channel 想象成"电话线接口"**
+**OpenClaw 把这些号码统一管理。**
 
-- 不同电话系统（聊天平台）需要不同接口
-- Channel 是适配各种电话线的"转换器"
-- Gateway 是中央交换机，处理所有接口的信号
+### Channel 类型
 
-就像酒店前台有多个电话线（市话、国际、内线），Gateway 通过不同 Channel 连接多种聊天平台。
+| 类型 | 说明 | 示例 |
+|------|------|------|
+| **内置通道** | 核心功能，默认支持 | Telegram, WhatsApp, Discord |
+| **插件通道** | 需要额外安装 | Matrix, Zalo, LINE |
+| **WebChat** | 浏览器聊天 | 内置 |
+| **Voice Call** | 电话通话 | 需要插件 |
 
-## 🔧 实践示例
+---
 
-### 支持的通道列表
+## 第二步：类比理解
 
-| 通道 | 设置难度 | 特点 |
-|------|----------|------|
-| **Telegram** | ⭐ 最简单 | 只需 Bot Token |
-| **WhatsApp** | ⭐⭐ 中等 | 需要 QR 配对 |
-| **Discord** | ⭐⭐ 中等 | Bot + 服务器配置 |
-| **Signal** | ⭐⭐⭐ 较难 | signal-cli |
-| **iMessage** | ⭐⭐⭐ 较难 | macOS + BlueBubbles |
-| **Slack** | ⭐⭐ 中等 | Bolt SDK |
-| **Matrix** | ⭐⭐ 中等 | 插件支持 |
-| **WebChat** | ⭐ 最简单 | 内置浏览器界面 |
+### 把 Channels 想象成"客服热线"
 
-### 通道配置模式
-
-所有通道共享相同的配置结构：
-
-```json5
-{
-  channels: {
-    telegram: {
-      enabled: true,
-      botToken: "123:abc",      // 通道特定凭证
-      dmPolicy: "pairing",      // 私聊策略
-      allowFrom: ["tg:123"],    // 允许列表
-      groups: {                 // 群聊配置
-        "*": { requireMention: true }
-      },
-    },
-  },
-}
+```mermaid
+flowchart LR
+    A[用户] --> B{选择渠道}
+    B --> C[WhatsApp]
+    B --> D[Telegram]
+    B --> E[Discord]
+    B --> F[WebChat]
+    
+    C --> G[Gateway]
+    D --> G
+    E --> G
+    F --> G
+    
+    G --> H[Agent]
+    H --> I[处理请求]
 ```
 
-### 私聊策略 (dmPolicy)
+| 类比 | 实际 |
+|------|------|
+| **客服热线** | Channel 通道 |
+| **电话号码** | Bot Token / Account |
+| **接线员** | Gateway |
+| **客服** | Agent |
+| **客户** | 用户 |
 
-| 策略 | 说明 | 适用场景 |
-|------|------|----------|
-| `pairing` | 未知用户收到配对码 | **默认，推荐** |
-| `allowlist` | 只有列表中用户可对话 | 严格限制 |
-| `open` | 允许所有人 | 公开服务 |
-| `disabled` | 禁止私聊 | 只在群聊使用 |
+---
 
-### 快速设置示例
+## 第三步：实践示例
 
-#### Telegram（最快）
+### 支持的聊天平台
 
-1. 创建 Bot：
-   - 打开 Telegram，找 @BotFather
-   - 发送 `/newbot`
-   - 获取 Bot Token
+| 平台 | 设置难度 | 推荐指数 | 说明 |
+|------|---------|---------|------|
+| **Telegram** | ⭐ 最简单 | ⭐⭐⭐ | 只需 Bot Token |
+| **WhatsApp** | ⭐⭐ 中等 | ⭐⭐⭐ | 需要扫码配对 |
+| **Discord** | ⭐⭐ 中等 | ⭐⭐⭐ | Bot + Guild 配置 |
+| **WebChat** | ⭐ 最简单 | ⭐⭐⭐ | 浏览器直接用 |
+| **Signal** | ⭐⭐⭐ 较难 | ⭐⭐ | 需要 signal-cli |
+| **iMessage** | ⭐⭐⭐ 较难 | ⭐⭐ | 需要 macOS |
+| **Matrix** | ⭐⭐ 中等 | ⭐⭐ | 插件支持 |
 
-2. 配置：
-```json5
-{
-  channels: {
-    telegram: {
-      enabled: true,
-      botToken: "123456:ABC-DEF",
-    },
-  },
-}
-```
+---
 
-3. 重启 Gateway：
+### 快速设置 Telegram
+
+**步骤：**
+
+1. 找 @BotFather 创建 Bot
+2. 获取 Bot Token（如 `123:abc`）
+3. 配置：
+
 ```bash
-openclaw gateway restart
+openclaw config set channels.telegram.enabled true
+openclaw config set channels.telegram.botToken "123:abc"
 ```
 
-#### WhatsApp
+### 快速设置 WhatsApp
 
-1. 启动 Gateway：
-```bash
-openclaw gateway
-```
+**步骤：**
 
-2. 获取 QR 码：
-```bash
-openclaw qr whatsapp
-# 或在控制面板查看
-```
+1. 配置启用：
 
-3. 用 WhatsApp 扫码配对
-
-4. 配置访问控制：
 ```json5
 {
   channels: {
     whatsapp: {
-      dmPolicy: "pairing",
-      allowFrom: ["wa:+15555550123"],
+      enabled: true,
     },
   },
 }
 ```
 
-#### Discord
+2. 扫码配对：
 
-1. 创建 Discord Bot：
-   - Discord Developer Portal
-   - New Application → Bot
-   - 获取 Token
+```bash
+openclaw pairing whatsapp
+```
 
-2. 添加 Bot 到服务器：
-   - OAuth2 → URL Generator
-   - 选择权限（Send Messages, Read Messages）
-   - 邀请链接加入服务器
+### 快速设置 Discord
 
-3. 配置：
+**步骤：**
+
+1. 创建 Discord Bot（Developer Portal）
+2. 获取 Bot Token
+3. 邀请 Bot 到服务器
+4. 配置：
+
 ```json5
 {
   channels: {
     discord: {
       enabled: true,
-      botToken: "your-bot-token",
-      servers: {
-        "your-server-id": {
-          channels: ["channel-1", "channel-2"],
-        },
-      },
+      botToken: "your_token",
+      guilds: ["your_guild_id"],
     },
   },
 }
 ```
 
-### 群聊行为
+---
 
-#### 提及规则
+### 访问控制（安全）
 
-群聊默认需要提及才回复：
+| 策略 | 说明 | 配置 |
+|------|------|------|
+| **pairing** | 新用户需配对码 | `dmPolicy: "pairing"` |
+| **allowlist** | 只允许列表用户 | `dmPolicy: "allowlist"` |
+| **open** | 允许所有人 | `dmPolicy: "open"` |
+| **disabled** | 禁止 DM | `dmPolicy: "disabled"` |
+
+**配置示例：**
+
+```json5
+{
+  channels: {
+    telegram: {
+      dmPolicy: "pairing",  // 新用户需要批准
+    },
+    whatsapp: {
+      dmPolicy: "allowlist",
+      allowFrom: ["+15555550123"],  // 只允许这个号码
+    },
+  },
+}
+```
+
+---
+
+### 群聊设置
+
+**默认：群聊需要 @提及**
 
 ```json5
 {
@@ -161,33 +170,57 @@ openclaw qr whatsapp
     whatsapp: {
       groups: {
         "*": { requireMention: true },  // 所有群都需要提及
-        "family-group": { requireMention: false },  // 特定群不需要
+        "work-group": { requireMention: false },  // 特定群不需要
       },
     },
   },
-}
-```
-
-#### 提及模式
-
-```json5
-{
   agents: {
     list: [{
       id: "main",
       groupChat: {
-        mentionPatterns: ["@openclaw", "openclaw", "助手"],
+        mentionPatterns: ["@openclaw", "openclaw"],  // 匹配模式
       },
     }],
   },
 }
 ```
 
-**提及类型：**
-- **元数据提及**：平台原生 @mention（WhatsApp 点选、Telegram @bot）
-- **文本模式**：消息中的文本匹配（如 "openclaw")
+---
 
-### 多通道同时运行
+## 第四步：知识关联
+
+### Channel 与 Gateway 的关系
+
+```mermaid
+sequenceDiagram
+    participant User as 用户
+    participant Channel as Channel
+    participant Gateway as Gateway
+    participant Agent as Agent
+    
+    User->>Channel: 发消息
+    Channel->>Gateway: 转发
+    Gateway->>Agent: 处理
+    Agent->>Gateway: 回复
+    Gateway->>Channel: 发送
+    Channel-->>User: 显示
+```
+
+### Channel 状态检查
+
+```bash
+# 查看所有 Channel 状态
+openclaw channels status
+
+# 深度检查（探测连接）
+openclaw channels status --probe
+```
+
+---
+
+### 多 Channel 同时运行
+
+**特点：** 一个 Gateway 可以同时连接多个 Channel
 
 ```json5
 {
@@ -199,102 +232,92 @@ openclaw qr whatsapp
 }
 ```
 
-Gateway 自动路由：
-- 消息从哪个通道来，回复到哪个通道
-- 每个通道独立会话
-
-### 通道状态检查
-
-```bash
-# 检查所有通道状态
-openclaw channels status
-
-# 详细探测（需要 Gateway 运行）
-openclaw channels status --probe
-```
-
-## 🔗 知识关联
-
-### Channels 与其他概念
-
-| 概念 | 与 Channels 的关系 |
-|------|---------------------|
-| Gateway | Gateway 管理 Channel 连接 |
-| Session | 每个 Channel 有独立会话 |
-| dmPolicy | 访问控制策略 |
-| Pairing | 配对流程管理用户访问 |
-
-### 内置 vs 插件通道
-
-| 类型 | 说明 | 例子 |
-|------|------|------|
-| 内置 | OpenClaw 核心支持 | Telegram, WhatsApp, Discord |
-| 插件 | 扩展包支持 | Matrix, IRC, Nostr, QQ Bot |
-
-插件通道安装：
-```bash
-openclaw plugins install matrix
-```
-
-### WebChat（内置浏览器界面）
-
-WebChat 是内置通道，无需额外配置：
-
-```bash
-openclaw dashboard
-# 打开 http://127.0.0.1:18789
-```
-
-适合：
-- 本地测试
-- 不想配置外部通道
-- 开发调试
-
-## ⚠️ 注意事项
-
-### WhatsApp 特别说明
-
-- 需要 QR 配对（类似手机登录）
-- 存储会话状态在磁盘
-- 不要频繁切换设备（可能被封）
-
-### iMessage 选项
-
-**推荐：BlueBubbles**
-- 全功能支持
-- REST API 接口
-- 编辑、撤回、特效等
-
-**遗留：imsg CLI**
-- 已废弃
-- 不推荐新安装
-
-### 安全建议
-
-1. **使用 pairing 策略**：防止未知用户滥用
-2. **配置 allowFrom**：限制访问范围
-3. **群聊启用 requireMention**：避免群内过度活跃
-4. **定期检查通道状态**：`channels status --probe`
-
-## 📝 总结
-
-Channel 是"电话线接口"：
-- 连接各种聊天平台
-- 每个平台需要特定配置
-- 统一的访问控制策略
-
-快速上手：
-- Telegram 最简单（Bot Token）
-- WhatsApp 需要 QR 配对
-- Discord 需要服务器配置
-
-关键配置：
-- `dmPolicy`：私聊策略
-- `groups`：群聊规则
-- `allowFrom`：访问列表
-
-下一步：[Gateway 网关](./06-Gateway网关.md) → 学习运维与监控。
+**好处：**
+- 手机用 WhatsApp 聊
+- 电脑用 Discord 聊
+- 浏览器用 WebChat 聊
+- **同一个 Agent，无缝切换！**
 
 ---
 
-*费曼学习法：概念解释 → 类比理解 → 实践示例 → 知识关联*
+## Channel 特性对比
+
+| 特性 | Telegram | WhatsApp | Discord | WebChat |
+|------|----------|----------|---------|---------|
+| **私聊** | ✅ | ✅ | ✅ | ✅ |
+| **群聊** | ✅ | ✅ | ✅ | ❌ |
+| **图片** | ✅ | ✅ | ✅ | ✅ |
+| **语音** | ✅ | ✅ | ✅ | ✅ |
+| **反应** | ✅ | ✅ | ✅ | ❌ |
+| **编辑** | ✅ | ✅ | ✅ | ❌ |
+| **需要手机** | ❌ | ✅ | ❌ | ❌ |
+
+---
+
+## 常见问题
+
+### Q1: Channel 连不上？
+
+**检查步骤：**
+
+```bash
+# 1. 查看 Gateway 状态
+openclaw gateway status
+
+# 2. 查看 Channel 状态
+openclaw channels status --probe
+
+# 3. 查看日志
+openclaw logs --follow
+```
+
+### Q2: 群聊里 Agent 不回复？
+
+**原因：** 默认需要 @提及
+
+**解决：**
+```json5
+{
+  channels: {
+    whatsapp: {
+      groups: { "*": { requireMention: false } },
+    },
+  },
+}
+```
+
+### Q3: 如何切换 Channel？
+
+**不需要切换！** 所有 Channel 共享同一个 Agent，会话自动路由。
+
+### Q4: 如何查看配对状态？
+
+```bash
+# 查看已配对用户
+openclaw pairing list
+```
+
+---
+
+## 更多 Channel 详情
+
+| Channel | 详细文档 |
+|---------|---------|
+| Telegram | https://docs.openclaw.ai/channels/telegram |
+| WhatsApp | https://docs.openclaw.ai/channels/whatsapp |
+| Discord | https://docs.openclaw.ai/channels/discord |
+| Signal | https://docs.openclaw.ai/channels/signal |
+| iMessage | https://docs.openclaw.ai/channels/bluebubbles |
+| Matrix | https://docs.openclaw.ai/channels/matrix |
+
+---
+
+## 下一步
+
+1. ✅ 选择一个 [Channel](https://docs.openclaw.ai/channels) 开始配置
+2. ✅ 阅读 [安全设置](https://docs.openclaw.ai/gateway/security)
+3. ✅ 了解 [Gateway 运维](./06-Gateway网关.md)
+
+---
+
+> 最后更新：2026-04-10 | 来源：https://docs.openclaw.ai/channels
