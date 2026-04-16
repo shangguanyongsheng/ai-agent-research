@@ -1,190 +1,100 @@
-# AI Agent 知识图谱
+# 🗺️ AI Agent 知识地图
 
-> 用费曼学习法构建 AI Agent 完整知识体系
+> 用三句话讲清楚：**AI Agent 是什么、怎么工作、怎么变聪明。**
 
 ---
 
-## 🗺️ 知识图谱总览
+## 从哪开始？
+
+如果你是第一次接触 AI Agent，按这个顺序看（每篇 5-10 分钟）：
+
+### 🟢 入门篇 — 理解核心概念
+
+| # | 文章 | 一句话总结 | 时间 |
+|---|------|-----------|------|
+| 1 | [Agent 是什么？](01-agent是什么.md) | Agent 是能自主干活的 AI，不只是聊天机器人 | 5 min |
+| 2 | [Agent 怎么思考？](02-agent怎么思考.md) | ReAct 循环：思考→行动→观察→反思 | 5 min |
+| 3 | [Agent 怎么被管理？](03-agent怎么被管理.md) | Harness 是 Agent 的方向盘、刹车和仪表盘 | 5 min |
+
+### 🟡 进阶篇 — 理解系统运作
+
+| # | 文章 | 一句话总结 | 时间 |
+|---|------|-----------|------|
+| 4 | [Agent 怎么记住？](04-agent怎么记住.md) | 双记忆系统：长期记忆 + 工作记忆 | 5 min |
+| 5 | [Agent 用什么工具？](05-agent用什么工具.md) | OpenClaw / Claude Code / Skills | 5 min |
+| 6 | [Agent 怎么变聪明？](06-agent怎么变聪明.md) | 进化引擎 + EvoMap = 吃自己的亏 + 学别人的经验 | 5 min |
+
+### 🟠 高阶篇 — 架构和设计
+
+| # | 文章 | 一句话总结 | 时间 |
+|---|------|-----------|------|
+| 7 | [多个 Agent 怎么协作？](07-多个agent怎么协作.md) | Multi-Agent：像公司团队一样分工 | 5 min |
+| 8 | [Agent 的安全防护](08-agent安全.md) | 安全沙箱：在围栏内自由发挥 | 5 min |
+| 9 | [怎么写好 Prompt？](09-prompt工程.md) | 好 Prompt = 好岗位说明书 | 5 min |
+
+> ⚡ 学完了？用 [速查卡](cheat-sheet.md) 1 分钟回顾全部概念。
+
+---
+
+## 完整知识图谱
 
 ```
-                            ┌─────────────────────────────────────┐
-                            │         AI Agent 知识体系            │
-                            │     感知 + 决策 + 行动 + 学习         │
-                            └─────────────────────────────────────┘
-                                            │
-        ┌───────────────┬───────────────┬───┴───┬───────────────┬───────────────┐
-        │               │               │       │               │
-        ▼               ▼               ▼       ▼               ▼
-┌───────────────┐┌───────────────┐┌───────────────┐┌───────────────┐┌───────────────┐
-│ foundation    ││ memory        ││ tools         ││ evolution     ││ advanced      │
-│ 基础概念      ││ 记忆系统      ││ 工具平台      ││ 进化系统      ││ 进阶主题      │
-└───────────────┘└───────────────┘└───────────────┘└───────────────┘└───────────────┘
-        │               │               │               │               │
-        ▼               ▼               ▼               ▼               ▼
-┌───────────────┐┌───────────────┐┌───────────────┐┌───────────────┐┌───────────────┐
-│ • Agent定义   ││ • 双记忆系统  ││ • OpenClaw    ││ • 进化引擎    ││ • Multi-Agent │
-│ • Agent Harness││ • 工作记忆   ││ • Claude Code ││ • EvoMap      ││ • 安全沙箱    │
-│ • ReAct框架   ││ • 持久化      ││ • Skills      ││ • 自然选择    ││ • Prompt Eng  │
-│ • Planning    ││               ││ • MCP协议     ││               ││ • Hooks机制   │
-└───────────────┘└───────────────┘└───────────────┘└───────────────┘└───────────────┘
+                    你用 Agent 帮你干活
+                           │
+        ┌──────────────────┼──────────────────┐
+        ▼                  ▼                  ▼
+
+   🧠 它是什么         🔧 它怎么工作         🧬 它怎么进化
+   ──────────          ──────────           ──────────
+   Agent 定义          ReAct 思考循环         进化引擎（本地）
+   Harness 控制        双记忆系统            EvoMap（全球）
+   安全沙箱            工具平台              自然选择
+   Prompt 工程         Multi-Agent
 ```
 
----
+## 每个知识点一句话总结
 
-## 📂 分支结构
-
-### 1️⃣ [foundation/](./foundation/) - 基础概念
-
-> AI Agent 的核心概念和理论基础
-
-| 知识点 | 文件 | 学习目标 |
-|--------|------|----------|
-| Agent 定义 | [agent-定义.md](./foundation/agent-定义.md) | 理解 Agent 是什么，与普通 LLM 的区别 |
-| Agent Harness | [agent-harness.md](./foundation/agent-harness.md) | 理解控制层的六大功能 |
-| ReAct 框架 | [react-框架.md](./foundation/react-框架.md) | 掌握 Thought→Action→Observation 循环 |
-| Planning | [planning.md](./foundation/planning.md) | 理解任务分解和规划策略 |
-
-**📖 来源文档**：`docs/Agent_Harness研究报告.md`
+| 知识点 | 一句话 |
+|--------|--------|
+| Agent | 能感知、决策、行动、学习的 AI，不只是聊天机器人 |
+| ReAct | 思考→行动→观察→反思，循环直到搞定 |
+| Harness | 控制 Agent 的方向盘、油门、刹车和仪表盘 |
+| 记忆系统 | 长期记忆（永久）+ 工作记忆（临时）= 双脑 |
+| 工具平台 | OpenClaw（聊天）+ Claude Code（终端）+ Skills（能力包） |
+| 进化引擎 | 每日分析错误，每月生成新技能，螺旋上升 |
+| EvoMap | 全球 Agent 共享知识的网络，好方案自然涌现 |
+| Multi-Agent | 多个专业 Agent 组队，像公司各部门分工 |
+| 安全沙箱 | 限制 Agent 的能力范围，防止危险操作 |
+| Prompt 工程 | 写好"工作手册"，让 Agent 按预期行动 |
 
 ---
 
-### 2️⃣ [memory/](./memory/) - 记忆系统
+## 快速诊断：我需要什么？
 
-> Agent 如何存储和检索信息
-
-| 知识点 | 文件 | 学习目标 |
-|--------|------|----------|
-| 双记忆系统 | [双记忆系统.md](./memory/双记忆系统.md) | 理解长期记忆 vs 工作记忆 |
-| 工作记忆 | [工作记忆.md](./memory/工作记忆.md) | 理解会话内的临时记忆 |
-| 持久化存储 | [持久化存储.md](./memory/持久化存储.md) | 理解如何持久化 Agent 记忆 |
-
-**📖 来源文档**：`learning/02-memory-system.md`
-
----
-
-### 3️⃣ [tools/](./tools/) - 工具平台
-
-> Agent 使用的工具和平台
-
-| 知识点 | 文件 | 学习目标 |
-|--------|------|----------|
-| OpenClaw | [openclaw.md](./tools/openclaw.md) | 掌握 Agent 网关的使用 |
-| Claude Code | [claude-code.md](./tools/claude-code.md) | 掌握终端 Agent 的使用 |
-| Skills 技能系统 | [skills.md](./tools/skills.md) | 理解技能的定义和管理 |
-| MCP 协议 | [mcp.md](./tools/mcp.md) | 理解模型上下文协议 |
-
-**📖 来源文档**：`docs/OpenClaw使用手册.md`、`docs/Claude_Code使用手册.md`
+| 你的需求 | 去看 |
+|---------|------|
+| "AI Agent 到底是个啥？" | [01 — Agent 是什么](01-agent是什么.md) |
+| "Agent 是怎么思考的？" | [02 — ReAct 循环](02-agent怎么思考.md) |
+| "怎么控制 Agent 不乱来？" | [03 — Harness](03-agent怎么被管理.md) |
+| "Agent 怎么记住我？" | [04 — 记忆系统](04-agent怎么记住.md) |
+| "用什么平台和工具？" | [05 — 工具平台](05-agent用什么工具.md) |
+| "Agent 怎么自己变聪明？" | [06 — 进化系统](06-agent怎么变聪明.md) |
+| "多个 Agent 怎么配合？" | [07 — Multi-Agent](07-多个agent怎么协作.md) |
+| "怎么防止 Agent 搞破坏？" | [08 — 安全沙箱](08-agent安全.md) |
+| "怎么让 Agent 听话？" | [09 — Prompt 工程](09-prompt工程.md) |
 
 ---
 
-### 4️⃣ [evolution/](./evolution/) - 进化系统
+## 文档说明
 
-> Agent 如何自我改进和进化
+- 🟢 **入门**：零基础也能看懂，每篇 5-10 分钟
+- 🟡 **进阶**：需要理解基础概念后阅读
+- 🟠 **高阶**：涉及系统设计和架构思维
 
-| 知识点 | 文件 | 学习目标 |
-|--------|------|----------|
-| 进化引擎 | [进化引擎.md](./evolution/进化引擎.md) | 理解螺旋上升的进化机制 |
-| EvoMap 进化网络 | [evomap.md](./evolution/evomap.md) | 理解全球 Agent 知识共享网络 |
-| 自然选择 | [自然选择.md](./evolution/自然选择.md) | 理解 GDI 评分和优胜劣汰 |
-
-**📖 来源文档**：`learning/04-evolution-engine.md`、`docs/evomap/`
+> 📁 `foundation/`、`tools/`、`memory/`、`evolution/`、`advanced/` 是原始详细文档，保留供深度学习参考。
+> 📄 顶层 `01-xx.md` 到 `09-xx.md` 是费曼精简版，让你快速入门。
 
 ---
 
-### 5️⃣ [advanced/](./advanced/) - 进阶主题
-
-> 高级概念和实践
-
-| 知识点 | 文件 | 学习目标 |
-|--------|------|----------|
-| Multi-Agent 协作 | [multi-agent.md](./advanced/multi-agent.md) | 理解多 Agent 协作模式 |
-| 安全与沙箱 | [安全沙箱.md](./advanced/安全沙箱.md) | 理解代码执行安全机制 |
-| Prompt Engineering | [prompt-engineering.md](./advanced/prompt-engineering.md) | 掌握系统提示词设计 |
-| Hooks 机制 | [hooks.md](./advanced/hooks.md) | 理解扩展点和拦截器 |
-
-**📖 来源文档**：`learning/07-multi-agent-collaboration.md`、`learning/08-safety-sandbox.md`
-
----
-
-## 🎓 费曼学习法
-
-每个知识点都遵循费曼学习法四步法：
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     费曼学习法四步法                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  第一步：概念解释                                            │
-│  ├── 用最简单的语言解释                                      │
-│  └── 就像教给一个完全不懂的人                                 │
-│                                                             │
-│  第二步：类比理解                                            │
-│  ├── 用生活中的例子类比                                      │
-│  └── 帮助建立直觉                                            │
-│                                                             │
-│  第三步：代码/实践                                           │
-│  ├── 通过代码理解实现细节                                    │
-│  └── 动手实验巩固理解                                        │
-│                                                             │
-│  第四步：知识关联                                            │
-│  ├── 说明这个概念与其他概念的关系                            │
-│  └── 建立完整的知识网络                                      │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 📈 学习路径
-
-### 推荐顺序
-
-```
-Week 1: 基础概念
-├── foundation/agent-定义.md
-├── foundation/agent-harness.md
-├── foundation/react-框架.md
-└── foundation/planning.md
-
-Week 2: 记忆系统
-├── memory/双记忆系统.md
-├── memory/工作记忆.md
-└── memory/持久化存储.md
-
-Week 3: 工具平台
-├── tools/openclaw.md
-├── tools/claude-code.md
-├── tools/skills.md
-└── tools/mcp.md
-
-Week 4: 进化系统
-├── evolution/进化引擎.md
-├── evolution/evomap.md
-└── evolution/自然选择.md
-
-Week 5: 进阶主题
-├── advanced/multi-agent.md
-├── advanced/安全沙箱.md
-├── advanced/prompt-engineering.md
-└── advanced/hooks.md
-```
-
----
-
-## 📚 原始文档索引
-
-`learning/` 目录是基于 `docs/` 原始文档的费曼学习法整理：
-
-| 原始文档 | 位置 | 衍生知识点 |
-|---------|------|-----------|
-| Agent_Harness研究报告.md | docs/ | foundation/* |
-| OpenClaw使用手册.md | docs/ | tools/openclaw.md |
-| Claude_Code使用手册.md | docs/ | tools/claude-code.md |
-| evomap/* | docs/evomap/ | evolution/evomap.md |
-| simple-bi-multi-agent-plan.md | docs/ | advanced/multi-agent.md |
-
----
-
-_📅 更新日期：2026-03-23_
-_🐒 毛猴子整理_
+_📅 更新日期：2026-04-16_
+_🐒 按费曼学习法重新整理_
