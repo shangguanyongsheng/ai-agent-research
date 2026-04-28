@@ -31,6 +31,7 @@
 | 7 | [多个 Agent 怎么协作？](07-多个agent怎么协作.md) | Multi-Agent：像公司团队一样分工 | 5 min |
 | 8 | [Agent 的安全防护](08-agent安全.md) | 安全沙箱：在围栏内自由发挥 | 5 min |
 | 9 | [怎么写好 Prompt？](09-prompt工程.md) | 好 Prompt = 好岗位说明书 | 5 min |
+| 10 | [如何编写 Agent 自主循环指令？](10-autoresearch-program.md) | 一份 Markdown 让 Agent 自己干活、自己试错、自己记录 | 5 min |
 
 > ⚡ 学完了？用 [速查卡](cheat-sheet.md) 1 分钟回顾全部概念。
 
@@ -50,6 +51,7 @@
    Harness 控制        双记忆系统            EvoMap（全球）
    安全沙箱            工具平台              自然选择
    Prompt 工程         Multi-Agent
+   自主循环指令
 ```
 
 ## 每个知识点一句话总结
@@ -66,6 +68,7 @@
 | Multi-Agent | 多个专业 Agent 组队，像公司各部门分工 |
 | 安全沙箱 | 限制 Agent 的能力范围，防止危险操作 |
 | Prompt 工程 | 写好"工作手册"，让 Agent 按预期行动 |
+| 自主循环指令 | 一份 Markdown 让 Agent 自主迭代，你睡觉它工作 |
 
 ---
 
@@ -82,6 +85,7 @@
 | "多个 Agent 怎么配合？" | [07 — Multi-Agent](07-多个agent怎么协作.md) |
 | "怎么防止 Agent 搞破坏？" | [08 — 安全沙箱](08-agent安全.md) |
 | "怎么让 Agent 听话？" | [09 — Prompt 工程](09-prompt工程.md) |
+| "怎么让 Agent 自己循环干活？" | [10 — 自主循环指令](10-autoresearch-program.md) |
 
 ---
 
@@ -96,5 +100,5 @@
 
 ---
 
-_📅 更新日期：2026-04-16_
+_📅 更新日期：2026-04-28_
 _🐒 按费曼学习法重新整理_
